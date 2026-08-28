@@ -9,8 +9,8 @@
   "properties": {
     "schema_version": { "const": "1.0" },
     "project_id": { "$ref": "#/$defs/id" },
-    "status": { "enum": ["QUEUED", "RUNNING", "RETRYING", "SUCCEEDED", "FAILED", "CANCELLED"] },
-    "current_step": { "enum": ["brief_normalize", "analyze_product", "create_script", "create_project_bible", "create_storyboard", "compile_prompts", "generate_shots", "qa_shots", "repair_prompts", "assemble_video", "completed", "failed", "cancelled"] },
+    "status": { "enum": ["QUEUED", "RUNNING", "WAITING_FOR_ASSETS", "RETRYING", "SUCCEEDED", "FAILED", "CANCELLED"] },
+    "current_step": { "enum": ["brief_normalize", "analyze_product", "ensure_reference_assets", "create_script", "create_project_bible", "create_storyboard", "compile_prompts", "generate_shots", "qa_shots", "repair_prompts", "assemble_video", "completed", "failed", "cancelled", "awaiting_assets"] },
     "progress": {
       "type": "object",
       "additionalProperties": false,

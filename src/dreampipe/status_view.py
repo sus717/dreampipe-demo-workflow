@@ -9,6 +9,8 @@ MAX_ATTEMPTS = 3
 TOTAL_STEPS = 8
 STEP_MAP = {
     "analyze_product": "analyze_product",
+    "ensure_reference_assets": "ensure_reference_assets",
+    "finish_waiting_for_assets": "awaiting_assets",
     "create_script": "create_script",
     "create_project_bible": "create_project_bible",
     "create_storyboard": "create_storyboard",
@@ -37,6 +39,8 @@ def _current_step(job: Mapping[str, Any], events: list[Mapping[str, Any]]) -> st
         return "failed"
     if job.get("status") == "CANCELLED":
         return "cancelled"
+    if job.get("status") == "WAITING_FOR_ASSETS":
+        return "awaiting_assets"
     if events:
         return STEP_MAP.get(str(events[-1].get("node", "")), "brief_normalize")
     return "brief_normalize"
@@ -47,6 +51,7 @@ def _public_status(job_status: str) -> str:
         "COMPLETED": "SUCCEEDED",
         "FAILED": "FAILED",
         "CANCELLED": "CANCELLED",
+        "WAITING_FOR_ASSETS": "WAITING_FOR_ASSETS",
         "RETRYING": "RETRYING",
         "UPLOADED": "QUEUED",
     }.get(job_status, "RUNNING")
@@ -114,7 +119,7 @@ def build_pipeline_status(job: Mapping[str, Any], events: list[Mapping[str, Any]
             "code": str(raw_error.get("code", "PIPELINE_ERROR")),
             "message": str(raw_error.get("message", "Pipeline failed.")),
             "step": current_step,
-            "retryable": raw_error.get("code") == "VIDEO_PROVIDER_ERROR",
+            "retryable": raw_error.get("code") in {"VIDEO_PROVIDER_ERROR", "REFERENCE_ASSETS_REQUIRED"},
         }
         if raw_error.get("shot_id"):
             error["shot_id"] = raw_error["shot_id"]
