@@ -4,13 +4,13 @@ Global task index. Load at session start to see what is active and what was done
 
 ## Active Task
 
-`pod2-creative-handoff` — freeze and validate Pod 2 creative contracts and MVP handoff files.
+None — create a new task from `Harness/tasks/_template/` when work spans more than one step.
 
 ## Task Index
 
 | ID | Goal | Phase | Closed |
 |----|------|-------|--------|
-| pod2-creative-handoff | Deliver frozen Project Bible, three-shot storyboard, schemas, and frontend mock | implementation |  |
+| task-pod2-creative-handoff | Deliver frozen Project Bible, three-shot storyboard, schemas, and frontend mock | closeout | 2026-08-28 |
 
 ## Cross-Task Decisions
 
