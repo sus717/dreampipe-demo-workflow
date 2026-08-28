@@ -1,0 +1,88 @@
+{
+  "schema": "harness-settings@1",
+  "language": {
+    "userFacing": "auto"
+  },
+  "context": {
+    "startupProfile": "thin",
+    "cacheFirst": true,
+    "budgetProfile": "auto"
+  },
+  "workflow": {
+    "defaultTier": "auto",
+    "taskCapsuleCap": 5
+  },
+  "wfMax": {
+    "mode": "useful",
+    "maxWorkersTotal": 15,
+    "maxWorkersPerWave": 7,
+    "maxReviewersPerWave": 4,
+    "maxManagersTotal": 4,
+    "reviewReservePercent": 30,
+    "stopDispatchBelowTokens": 50000
+  },
+  "wfAuto": {
+    "enabled": true,
+    "maxFilesPerCycle": 3,
+    "maxNetLinesPerCycle": 50,
+    "checkpointSchedule": [2, 5, 10]
+  },
+  "wfAutoSpark": {
+    "enabled": true,
+    "minNorthStarAlignmentPercent": 50,
+    "rollingAlignmentFloorPercent": 65,
+    "roadmapReviewEveryCycles": 10
+  },
+  "telemetry": {
+    "l2Cache": {
+      "claimMinWarmTurns": 10,
+      "claimMinReadRatioPercent": 95,
+      "claimMinUpliftPoints": 2
+    }
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 0
+  },
+  "terminal": {
+    "enabled": false,
+    "attachMode": false,
+    "defaultRuntime": "codex"
+  },
+  "peers": {
+    "allowlist": [
+      "claude",
+      "cc",
+      "codex",
+      "opencode",
+      "gemini",
+      "qwen",
+      "deepseek",
+      "pi",
+      "aider",
+      "goose",
+      "amp",
+      "crush",
+      "cline",
+      "plandex",
+      "openclaw",
+      "chatgpt",
+      "openai"
+    ]
+  },
+  "ui": {
+    "theme": "auto",
+    "language": "zh",
+    "reducedMotion": false
+  },
+  "cleanup": {
+    "enabled": true,
+    "autoPruneOnStartup": true,
+    "autoPruneIntervalHours": 6,
+    "autoPruneStoppedSessions": false,
+    "stoppedSessionRetentionDays": 14,
+    "keepStoppedSessions": 20,
+    "includeTaskSessions": false,
+    "detachedLogRetentionHours": 24
+  }
+}
