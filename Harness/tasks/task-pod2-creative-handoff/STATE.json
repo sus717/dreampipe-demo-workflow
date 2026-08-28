@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "taskId": "task-pod2-creative-handoff",
+  "status": "complete",
+  "mode": "direct",
+  "tier": "none",
+  "phase": "closeout",
+  "gate": null,
+  "updatedAt": "2026-08-28T17:20:00.000+08:00",
+  "activeQuestion": null,
+  "nextAction": "None; feature branch pushed for team review and merge",
+  "acceptance": [
+    "The Project Bible and Shot List validate against their shared schemas",
+    "The storyboard uses S01-S03, totals 15 seconds, and contains no model prompt fields",
+    "The frontend mock exposes the stable creative fields needed by the UI"
+  ],
+  "links": {
+    "dependsOn": [],
+    "blocks": [],
+    "related": []
+  },
+  "queues": {
+    "ready": [],
+    "running": [],
+    "blocked": [],
+    "done": ["inspect_latest_handoff", "write_contracts", "validate_and_submit"]
+  },
+  "workItems": [
+    {
+      "id": "write_contracts",
+      "status": "done",
+      "summary": "Create schemas, final JSON payloads, and frontend mock"
+    },
+    {
+      "id": "validate_and_submit",
+      "status": "done",
+      "summary": "Validate, commit, and push the Pod 2 handoff"
+    }
+  ],
+  "dispatchLedger": [],
+  "decisions": [
+    "Treat the destination experience as the product boundary without inventing a physical product",
+    "Allow an empty reference asset array until approved assets are supplied",
+    "Keep provider prompt fields outside the Pod 2 Shot List"
+  ],
+  "risks": [
+    "Pod 1 brief and Pod 3 runtime still require updates before an empty-asset real generation can run"
+  ],
+  "artifacts": [
+    "shared/schemas/project_bible.schema.json",
+    "shared/schemas/shots.schema.json",
+    "shared/project_bible.json",
+    "shared/shots.json",
+    "examples/pod2-creative.frontend.mock.json"
+  ]
+}
