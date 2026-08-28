@@ -37,6 +37,18 @@ $env:PYTHONPATH = ".venv_lib;src"
 python scripts/run_pipeline.py shared/brief.json --provider mock
 ```
 
+默认读取 `shared/project_bible.json` 与 `shared/shots.json` 作为 Pod 2 冻结的模型无关创意合同，
+并用 GLM-4.5-Air 编译模型专用 Prompt：
+
+```powershell
+python scripts/run_pipeline.py shared/brief.json --provider happyhorse `
+  --reference-image-url https://your-cdn.example.com/reference.png `
+  --creative-source pod2 --llm glm
+```
+
+没有真实、可访问的参考图时，Pipeline 返回 `WAITING_FOR_ASSETS`，不会生成 Mock 视频、QA 或合成成片。
+`--creative-source mock` 与 `--llm mock` 仅用于本地回归；演示和生产路径使用默认的 `pod2` 与 `glm`。
+
 Real generation requires `BAILIAN_API_KEY`, configured API URLs in local
 `.env`, and a public HTTP(S) product reference image URL. Copy `.env.example`
 to an untracked `.env` before local development.

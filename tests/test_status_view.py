@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PipelineStatusViewTests(unittest.TestCase):
-    def test_completed_mock_job_projects_to_frontend_contract(self):
+    def test_missing_reference_assets_projects_to_frontend_contract(self):
         brief = ROOT / "shared" / "brief.json"
         if not brief.is_file():
             brief = ROOT / "shared" / "schemas" / "brief.schemav2.json"
@@ -24,9 +24,10 @@ class PipelineStatusViewTests(unittest.TestCase):
         status = build_pipeline_status(state["job"], state["events"])
         schema = json.loads((ROOT / "shared" / "schemas" / "pipeline_status.schema.json").read_text(encoding="utf-8"))
         Draft202012Validator(schema, format_checker=FormatChecker()).validate(status)
-        self.assertEqual(status["status"], "SUCCEEDED")
-        self.assertEqual(status["final_output"]["status"], "READY")
-        self.assertEqual(status["retry"]["shots"][1]["attempt"], 2)
+        self.assertEqual(status["status"], "WAITING_FOR_ASSETS")
+        self.assertEqual(status["current_step"], "awaiting_assets")
+        self.assertEqual(status["error"]["code"], "REFERENCE_ASSETS_REQUIRED")
+        self.assertEqual(status["final_output"]["status"], "PENDING")
 
     def test_failed_job_keeps_error_safe_for_frontend(self):
         job = {

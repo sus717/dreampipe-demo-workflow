@@ -13,6 +13,7 @@ from typing import Any, Literal, TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from dreampipe.adapters.video_provider import VideoProvider
+from dreampipe.adapters.glm_adapter import GLMPromptCompiler
 from dreampipe.qa_agent import RealVideoQAAgent, VisionQAError
 
 MAX_GENERATION_ATTEMPTS = 3
@@ -49,7 +50,45 @@ def analyze_product(state: PipelineState) -> dict[str, Any]:
     return update_job(state, "analyze_product", "Mock product analysis completed.", status="BRIEF_READY", product=product)
 
 
-def create_script(state: PipelineState) -> dict[str, Any]:
+def ensure_reference_assets(state: PipelineState) -> dict[str, Any]:
+    """Pause before creative/model work unless usable source images are registered."""
+    job = deepcopy(state["job"])
+    assets_by_id = {asset.get("asset_id"): asset for asset in job.get("assets", [])}
+    source_ids = list(job.get("product", {}).get("source_asset_ids", []))
+    missing = [
+        asset_id for asset_id in source_ids
+        if not str(assets_by_id.get(asset_id, {}).get("url", "")).startswith(("http://", "https://"))
+    ]
+    if not source_ids or missing:
+        job["status"] = "WAITING_FOR_ASSETS"
+        job["error"] = {
+            "code": "REFERENCE_ASSETS_REQUIRED",
+            "message": "请先上传并确认可访问的商品参考图（HTTP(S) URL），再开始视频生成。",
+            "missing_asset_ids": missing or source_ids,
+            "retryable": True,
+        }
+        job["updated_at"] = now()
+        return {"job": job, **event(state, "ensure_reference_assets", "真实参考图未就绪，已暂停后续流程。")}
+    return update_job(state, "ensure_reference_assets", "Approved public reference assets are ready.")
+
+
+def create_script(state: PipelineState, creative_handoff: dict[str, Any] | None = None) -> dict[str, Any]:
+    if creative_handoff is not None:
+        shots = creative_handoff["shots"]
+        bible = creative_handoff["project_bible"]
+        script = {
+            "concept": bible.get("creative_concept", ""),
+            "hook": shots[0]["story_function"],
+            "narrative_structure": "approved_pod2_storyboard",
+            "beats": [
+                {"beat_id": f"beat_{shot['sequence']:02d}", "purpose": shot["purpose"], "description": shot["story_function"]}
+                for shot in shots
+            ],
+            "voiceover": [],
+            "on_screen_copy": [shot.get("on_screen_copy", "") for shot in shots if shot.get("on_screen_copy")],
+            "cta_copy": state["job"]["creative_brief"]["cta"],
+        }
+        return update_job(state, "create_script", "Loaded script outline from Pod 2 creative handoff.", status="SCRIPT_READY", script=script)
     product = state["job"]["product"]
     brief = state["job"]["creative_brief"]
     selling_point = product["key_selling_points"][0]
@@ -69,7 +108,9 @@ def create_script(state: PipelineState) -> dict[str, Any]:
     return update_job(state, "create_script", "Mock Director script created.", status="SCRIPT_READY", script=script)
 
 
-def create_project_bible(state: PipelineState) -> dict[str, Any]:
+def create_project_bible(state: PipelineState, creative_handoff: dict[str, Any] | None = None) -> dict[str, Any]:
+    if creative_handoff is not None:
+        return update_job(state, "create_project_bible", "Loaded frozen Project Bible from Pod 2.", status="BIBLE_READY", project_bible=creative_handoff["project_bible"])
     product = state["job"]["product"]
     if product["source_asset_ids"]:
         invariant = f"Keep the supplied {product['name']} reference assets unchanged."
@@ -93,7 +134,9 @@ def create_project_bible(state: PipelineState) -> dict[str, Any]:
     return update_job(state, "create_project_bible", "Mock Cinematic Director project bible created.", status="BIBLE_READY", project_bible=bible)
 
 
-def create_storyboard(state: PipelineState) -> dict[str, Any]:
+def create_storyboard(state: PipelineState, creative_handoff: dict[str, Any] | None = None) -> dict[str, Any]:
+    if creative_handoff is not None:
+        return update_job(state, "create_storyboard", "Loaded frozen three-shot storyboard from Pod 2.", status="STORYBOARD_READY", shots=creative_handoff["shots"])
     duration = state["job"]["creative_brief"]["duration_seconds"]
     first = max(3, duration // 4)
     second = max(4, duration // 3)
@@ -106,21 +149,45 @@ def create_storyboard(state: PipelineState) -> dict[str, Any]:
     return update_job(state, "create_storyboard", "Mock AI Video Storyboard created three shots.", status="STORYBOARD_READY", shots=shots)
 
 
-def compile_prompts(state: PipelineState, provider: VideoProvider | None = None) -> dict[str, Any]:
+def compile_prompts(
+    state: PipelineState,
+    provider: VideoProvider | None = None,
+    prompt_compiler: GLMPromptCompiler | None = None,
+) -> dict[str, Any]:
     job = state["job"]
     product = job["product"]
     asset_ids = product["source_asset_ids"]
     prompts = []
     for shot in job["shots"]:
+        target_model = provider.provider_name if provider is not None else "mock-video-provider"
+        if prompt_compiler is not None:
+            try:
+                compiled = prompt_compiler.compile(
+                    shot=shot,
+                    project_bible=job["project_bible"],
+                    brief=job["creative_brief"],
+                    target_model=target_model,
+                )
+            except Exception as exc:
+                failed = deepcopy(job)
+                failed["status"] = "FAILED"
+                failed["error"] = {"code": "PROMPT_COMPILATION_ERROR", "message": str(exc), "step": "compile_prompts", "retryable": True}
+                failed["updated_at"] = now()
+                return {"job": failed, **event(state, "compile_prompts", f"GLM prompt compilation failed: {exc}")}
+            prompt_text = compiled["prompt"]
+            negative_prompt = compiled["negative_prompt"]
+        else:
+            prompt_text = f"{shot['description']} Camera: {shot['camera']}. Preserve {product['name']} and all Project Bible invariants. {job['project_bible']['visual_theme']['lighting']}. {shot['duration_seconds']} seconds."
+            negative_prompt = "; ".join(job["project_bible"]["negative_constraints"])
         prompts.append({
             "prompt_id": f"prompt_{shot['shot_id']}_v1",
             "shot_id": shot["shot_id"],
             "version": 1,
-            "target_model": provider.provider_name if provider is not None else "mock-video-provider",
+            "target_model": target_model,
             "generation_mode": "image_to_video",
             "reference_asset_ids": asset_ids,
-            "prompt": f"{shot['description']} Camera: {shot['camera']}. Preserve {product['name']} and all Project Bible invariants. {job['project_bible']['visual_theme']['lighting']}. {shot['duration_seconds']} seconds.",
-            "negative_prompt": "; ".join(job["project_bible"]["negative_constraints"]),
+            "prompt": prompt_text,
+            "negative_prompt": negative_prompt,
             "parameters": {"duration_seconds": shot["duration_seconds"], "aspect_ratio": job["creative_brief"]["aspect_ratio"]}
         })
     return update_job(state, "compile_prompts", "Mock MX Shell Prompt compiler created provider prompts.", status="PROMPTS_READY", generation_prompts=prompts)
@@ -330,6 +397,18 @@ def route_after_generation(state: PipelineState) -> Literal["qa_shots", "finish_
     return "finish_failed_job" if state["job"]["status"] == "FAILED" else "qa_shots"
 
 
+def route_after_optional_error(state: PipelineState, next_node: str) -> str:
+    return "finish_failed_job" if state["job"]["status"] == "FAILED" else next_node
+
+
+def route_after_asset_check(state: PipelineState) -> Literal["create_script", "finish_waiting_for_assets"]:
+    return "finish_waiting_for_assets" if state["job"]["status"] == "WAITING_FOR_ASSETS" else "create_script"
+
+
+def finish_waiting_for_assets(state: PipelineState) -> dict[str, Any]:
+    return {"job": deepcopy(state["job"]), **event(state, "finish_waiting_for_assets", "Pipeline paused until real reference assets are supplied.")}
+
+
 def route_after_qa(state: PipelineState) -> Literal["repair_prompts", "assemble_video", "finish_failed_job"]:
     if state["job"]["status"] == "FAILED":
         return "finish_failed_job"
@@ -343,7 +422,7 @@ def route_after_qa(state: PipelineState) -> Literal["repair_prompts", "assemble_
     return "assemble_video"
 
 
-def repair_prompts(state: PipelineState) -> dict[str, Any]:
+def repair_prompts(state: PipelineState, prompt_compiler: GLMPromptCompiler | None = None) -> dict[str, Any]:
     job = deepcopy(state["job"])
     reports = latest_reports(job)
     prompts = list(job["generation_prompts"])
@@ -354,7 +433,25 @@ def repair_prompts(state: PipelineState) -> dict[str, Any]:
         repaired = deepcopy(latest)
         repaired["version"] += 1
         repaired["prompt_id"] = f"prompt_{shot_id}_v{repaired['version']}"
-        repaired["prompt"] = f"{latest['prompt']} Repair constraint: {report['repair_instruction']}"
+        if prompt_compiler is not None:
+            try:
+                compiled = prompt_compiler.repair(
+                    shot=next(shot for shot in job["shots"] if shot["shot_id"] == shot_id),
+                    project_bible=job["project_bible"],
+                    brief=job["creative_brief"],
+                    target_model=latest["target_model"],
+                    previous_prompt=latest,
+                    repair_instruction=report["repair_instruction"],
+                )
+            except Exception as exc:
+                job["status"] = "FAILED"
+                job["error"] = {"code": "PROMPT_REPAIR_ERROR", "message": str(exc), "step": "repair_prompts", "retryable": True}
+                job["updated_at"] = now()
+                return {"job": job, **event(state, "repair_prompts", f"GLM prompt repair failed: {exc}")}
+            repaired["prompt"] = compiled["prompt"]
+            repaired["negative_prompt"] = compiled["negative_prompt"]
+        else:
+            repaired["prompt"] = f"{latest['prompt']} Repair constraint: {report['repair_instruction']}"
         prompts.append(repaired)
     job["generation_prompts"] = prompts
     job["status"] = "GENERATING"
@@ -392,55 +489,72 @@ def assemble_video(state: PipelineState) -> dict[str, Any]:
     return {"job": job, **event(state, "assemble_video", "Mock Remotion assembler created the final MP4 manifest.")}
 
 
-def build_mock_graph(provider: VideoProvider | None = None):
+def build_mock_graph(
+    provider: VideoProvider | None = None,
+    creative_handoff: dict[str, Any] | None = None,
+    prompt_compiler: GLMPromptCompiler | None = None,
+):
     graph = StateGraph(PipelineState)
     graph.add_node("analyze_product", analyze_product)
-    graph.add_node("create_script", create_script)
-    graph.add_node("create_project_bible", create_project_bible)
-    graph.add_node("create_storyboard", create_storyboard)
-    graph.add_node("compile_prompts", lambda state: compile_prompts(state, provider=provider))
+    graph.add_node("ensure_reference_assets", ensure_reference_assets)
+    graph.add_node("create_script", lambda state: create_script(state, creative_handoff=creative_handoff))
+    graph.add_node("create_project_bible", lambda state: create_project_bible(state, creative_handoff=creative_handoff))
+    graph.add_node("create_storyboard", lambda state: create_storyboard(state, creative_handoff=creative_handoff))
+    graph.add_node("compile_prompts", lambda state: compile_prompts(state, provider=provider, prompt_compiler=prompt_compiler))
     graph.add_node("generate_shots", lambda state: generate_shots(state, provider=provider))
     graph.add_node("qa_shots", qa_shots)
-    graph.add_node("repair_prompts", repair_prompts)
+    graph.add_node("repair_prompts", lambda state: repair_prompts(state, prompt_compiler=prompt_compiler))
     graph.add_node("assemble_video", assemble_video)
     graph.add_node("finish_failed_job", finish_failed_job)
+    graph.add_node("finish_waiting_for_assets", finish_waiting_for_assets)
     graph.add_edge(START, "analyze_product")
-    graph.add_edge("analyze_product", "create_script")
+    graph.add_edge("analyze_product", "ensure_reference_assets")
+    graph.add_conditional_edges("ensure_reference_assets", route_after_asset_check, {"create_script": "create_script", "finish_waiting_for_assets": "finish_waiting_for_assets"})
     graph.add_edge("create_script", "create_project_bible")
     graph.add_edge("create_project_bible", "create_storyboard")
     graph.add_edge("create_storyboard", "compile_prompts")
-    graph.add_edge("compile_prompts", "generate_shots")
+    graph.add_conditional_edges("compile_prompts", lambda state: route_after_optional_error(state, "generate_shots"), {"generate_shots": "generate_shots", "finish_failed_job": "finish_failed_job"})
     graph.add_conditional_edges(
         "generate_shots",
         route_after_generation,
         {"qa_shots": "qa_shots", "finish_failed_job": "finish_failed_job"},
     )
     graph.add_conditional_edges("qa_shots", route_after_qa, {"repair_prompts": "repair_prompts", "assemble_video": "assemble_video"})
-    graph.add_edge("repair_prompts", "generate_shots")
+    graph.add_conditional_edges("repair_prompts", lambda state: route_after_optional_error(state, "generate_shots"), {"generate_shots": "generate_shots", "finish_failed_job": "finish_failed_job"})
     graph.add_edge("assemble_video", END)
     graph.add_edge("finish_failed_job", END)
+    graph.add_edge("finish_waiting_for_assets", END)
     return graph.compile()
 
 
-def build_real_graph(*, provider: VideoProvider, qa_agent: RealVideoQAAgent):
+def build_real_graph(
+    *,
+    provider: VideoProvider,
+    qa_agent: RealVideoQAAgent,
+    creative_handoff: dict[str, Any] | None = None,
+    prompt_compiler: GLMPromptCompiler | None = None,
+):
     """Build the production path; both video generation and QA are mandatory."""
     graph = StateGraph(PipelineState)
     graph.add_node("analyze_product", analyze_product)
-    graph.add_node("create_script", create_script)
-    graph.add_node("create_project_bible", create_project_bible)
-    graph.add_node("create_storyboard", create_storyboard)
-    graph.add_node("compile_prompts", lambda state: compile_prompts(state, provider=provider))
+    graph.add_node("ensure_reference_assets", ensure_reference_assets)
+    graph.add_node("create_script", lambda state: create_script(state, creative_handoff=creative_handoff))
+    graph.add_node("create_project_bible", lambda state: create_project_bible(state, creative_handoff=creative_handoff))
+    graph.add_node("create_storyboard", lambda state: create_storyboard(state, creative_handoff=creative_handoff))
+    graph.add_node("compile_prompts", lambda state: compile_prompts(state, provider=provider, prompt_compiler=prompt_compiler))
     graph.add_node("generate_shots", lambda state: generate_shots(state, provider=provider))
     graph.add_node("qa_shots", lambda state: real_qa_shots(state, qa_agent=qa_agent))
-    graph.add_node("repair_prompts", repair_prompts)
+    graph.add_node("repair_prompts", lambda state: repair_prompts(state, prompt_compiler=prompt_compiler))
     graph.add_node("assemble_video", assemble_video)
     graph.add_node("finish_failed_job", finish_failed_job)
+    graph.add_node("finish_waiting_for_assets", finish_waiting_for_assets)
     graph.add_edge(START, "analyze_product")
-    graph.add_edge("analyze_product", "create_script")
+    graph.add_edge("analyze_product", "ensure_reference_assets")
+    graph.add_conditional_edges("ensure_reference_assets", route_after_asset_check, {"create_script": "create_script", "finish_waiting_for_assets": "finish_waiting_for_assets"})
     graph.add_edge("create_script", "create_project_bible")
     graph.add_edge("create_project_bible", "create_storyboard")
     graph.add_edge("create_storyboard", "compile_prompts")
-    graph.add_edge("compile_prompts", "generate_shots")
+    graph.add_conditional_edges("compile_prompts", lambda state: route_after_optional_error(state, "generate_shots"), {"generate_shots": "generate_shots", "finish_failed_job": "finish_failed_job"})
     graph.add_conditional_edges(
         "generate_shots",
         route_after_generation,
@@ -455,7 +569,8 @@ def build_real_graph(*, provider: VideoProvider, qa_agent: RealVideoQAAgent):
             "finish_failed_job": "finish_failed_job",
         },
     )
-    graph.add_edge("repair_prompts", "generate_shots")
+    graph.add_conditional_edges("repair_prompts", lambda state: route_after_optional_error(state, "generate_shots"), {"generate_shots": "generate_shots", "finish_failed_job": "finish_failed_job"})
     graph.add_edge("assemble_video", END)
     graph.add_edge("finish_failed_job", END)
+    graph.add_edge("finish_waiting_for_assets", END)
     return graph.compile()

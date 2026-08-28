@@ -71,6 +71,16 @@ def normalize_brief_v2(source: dict[str, Any], *, source_path: str | None = None
             "url": f"asset://{reference_string.lstrip('/')}" ,
             "mime_type": "image/*",
         })
+    for asset_id in reference_asset_ids:
+        asset_id = str(asset_id)
+        if not asset_id:
+            continue
+        assets.append({
+            "asset_id": asset_id,
+            "kind": "product_image",
+            "url": f"asset://{asset_id}",
+            "mime_type": "image/*",
+        })
 
     must_show = _flatten_must_show(source.get("must_show"))
     prohibited = [str(item) for item in source.get("prohibited", [])]
@@ -109,6 +119,7 @@ def normalize_brief_v2(source: dict[str, Any], *, source_path: str | None = None
             "cta": source["cta"],
             "budget_cny": budget_amount,
         },
+        "expected_shot_count": source.get("shot_count", 3),
         "cost": {
             "budget_cny": budget_amount,
             "spent_cny": 0,
