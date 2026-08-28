@@ -12,7 +12,7 @@
     "status": { "enum": ["UPLOADED", "ANALYZING_PRODUCT", "BRIEF_READY", "SCRIPT_READY", "BIBLE_READY", "STORYBOARD_READY", "PROMPTS_READY", "GENERATING", "QA_CHECKING", "RETRYING", "ASSEMBLING", "COMPLETED", "FAILED", "CANCELLED"] },
     "created_at": { "type": "string", "format": "date-time" },
     "updated_at": { "type": "string", "format": "date-time" },
-    "assets": { "type": "array", "items": { "$ref": "#/$defs/asset" }, "minItems": 1 },
+    "assets": { "type": "array", "items": { "$ref": "#/$defs/asset" } },
     "product": { "$ref": "#/$defs/product" },
     "creative_brief": { "$ref": "#/$defs/brief" },
     "script": { "$ref": "#/$defs/script" },
@@ -44,7 +44,7 @@
       "required": ["name", "category", "source_asset_ids", "key_selling_points", "must_show", "must_avoid"],
       "properties": {
         "name": { "type": "string", "minLength": 1 }, "brand": { "type": "string" }, "category": { "type": "string", "minLength": 1 },
-        "source_asset_ids": { "type": "array", "items": { "$ref": "#/$defs/id" }, "minItems": 1 },
+        "source_asset_ids": { "type": "array", "items": { "$ref": "#/$defs/id" } },
         "appearance": { "type": "object" },
         "key_selling_points": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
         "must_show": { "type": "array", "items": { "type": "string" } },
