@@ -1,57 +1,143 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dreampipe.dev/shared/schemas/project_bible.schema.json",
   "title": "DreamPipe Project Bible",
+  "description": "Model-agnostic creative constraints shared by every shot in one DreamPipe job.",
   "type": "object",
-  "required": ["project_id", "creative_concept", "characters", "locations", "visual_style", "brand_rules"],
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_id",
+    "product_reference_asset_ids",
+    "creative_concept",
+    "characters",
+    "locations",
+    "visual_theme",
+    "product_invariants",
+    "brand_invariants",
+    "negative_constraints"
+  ],
   "properties": {
-    "project_id": { "type": "string" },
-    "creative_concept": { "type": "string" },
-    "tone": { "type": "string" },
+    "schema_version": { "const": "1.0" },
+    "project_id": { "$ref": "#/$defs/id" },
+    "product_reference_asset_ids": {
+      "description": "Approved workflow asset IDs. The array may be empty until real reference assets are registered.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/id" },
+      "minItems": 0,
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "creative_concept": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
     "characters": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["id", "name", "description"],
-        "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "must_keep": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        }
-      }
+      "items": { "$ref": "#/$defs/character" },
+      "minItems": 1,
+      "maxItems": 12
     },
     "locations": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["id", "name", "description"],
-        "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "description": { "type": "string" }
+      "items": { "$ref": "#/$defs/location" },
+      "minItems": 1,
+      "maxItems": 12
+    },
+    "visual_theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "palette",
+        "lighting",
+        "lens_character",
+        "film_look",
+        "motion_language",
+        "aspect_ratio"
+      ],
+      "properties": {
+        "palette": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "minItems": 2,
+          "maxItems": 6,
+          "uniqueItems": true
+        },
+        "lighting": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "lens_character": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "film_look": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "motion_language": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "aspect_ratio": { "enum": ["9:16", "16:9", "1:1", "4:5"] }
+      }
+    },
+    "product_invariants": {
+      "description": "Destination-experience facts that the Prompt Compiler must preserve in every relevant shot.",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 },
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "brand_invariants": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 },
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "negative_constraints": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 },
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true
+    },
+    "audio_direction": { "type": "string", "maxLength": 800 },
+    "notes_for_prompt_compiler": { "type": "string", "maxLength": 2000 }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "character": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "role", "description", "must_keep"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "role": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 800 },
+        "voice_direction": { "type": "string", "maxLength": 300 },
+        "must_keep": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 },
+          "minItems": 1,
+          "maxItems": 12,
+          "uniqueItems": true
         }
       }
     },
-    "visual_style": {
+    "location": {
       "type": "object",
-      "required": ["keywords", "color_palette", "camera_language"],
+      "additionalProperties": false,
+      "required": ["id", "name", "description", "must_keep"],
       "properties": {
-        "keywords": { "type": "array", "items": { "type": "string" } },
-        "color_palette": { "type": "array", "items": { "type": "string" } },
-        "camera_language": { "type": "string" }
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 800 },
+        "must_keep": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 },
+          "minItems": 1,
+          "maxItems": 12,
+          "uniqueItems": true
+        }
       }
-    },
-    "brand_rules": {
-      "type": "array",
-      "items": { "type": "string" }
-    },
-    "negative_rules": {
-      "type": "array",
-      "items": { "type": "string" }
     }
   }
 }
-

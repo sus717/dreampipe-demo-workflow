@@ -1,0 +1,146 @@
+{
+  "project_id": "dreampipe-demo-fuzhou-sanfangqixiang-niulai-20260828",
+  "creative": {
+    "title": "《第七巷今天调休》",
+    "concept": "牛来与虎纠发现三坊七巷只剩六巷，在巨大福州鱼丸的追逐中寻找离巷出走的第七巷，最后在烟台山发现它只是在调休。",
+    "destination": "福州三坊七巷城市漫游体验",
+    "reference_asset_ids": [],
+    "aspect_ratio": "9:16",
+    "target_duration_seconds": 15,
+    "cta": "去三坊七巷，找到第七巷",
+    "characters": [
+      {
+        "id": "niu_lai",
+        "name": "牛来",
+        "role": "情绪极其真挚的牛主角"
+      },
+      {
+        "id": "hu_jiu",
+        "name": "虎纠",
+        "role": "福州本地虎与冷面向导"
+      },
+      {
+        "id": "seventh_lane",
+        "name": "第七巷",
+        "role": "在烟台山调休的巷子精灵"
+      },
+      {
+        "id": "mother_voice",
+        "name": "妈妈",
+        "role": "只存在于画外音中的牛来妈妈"
+      }
+    ],
+    "locations": [
+      {
+        "id": "sanfang_qixiang",
+        "name": "福州三坊七巷"
+      },
+      {
+        "id": "yantai_mountain",
+        "name": "福州烟台山"
+      }
+    ]
+  },
+  "shots": [
+    {
+      "shot_id": "S01",
+      "sequence": 1,
+      "duration_seconds": 5,
+      "purpose": "hook",
+      "description": "妈妈画外呼喊牛来，牛来回应后，虎纠宣布三坊七巷只剩六巷。",
+      "subject": "牛来、虎纠、妈妈画外音、三坊七巷",
+      "action": "牛来回头回应妈妈；虎纠清点街巷并通报危机。",
+      "camera": "中近景缓推牛来，随后快速横移到虎纠并短暂停顿。",
+      "dialogue": [
+        {
+          "speaker": "妈妈",
+          "line": "牛来——"
+        },
+        {
+          "speaker": "牛来",
+          "line": "妈妈！"
+        },
+        {
+          "speaker": "虎纠",
+          "line": "不好了，三坊七巷只剩六巷了！"
+        },
+        {
+          "speaker": "牛来",
+          "line": "那三坊呢？"
+        },
+        {
+          "speaker": "虎纠",
+          "line": "坊不归我管。"
+        }
+      ],
+      "continuity_anchors": [
+        "牛来与虎纠的外形、服装和左右位置固定。",
+        "妈妈只作为画外音。",
+        "场景为福州三坊七巷古厝主巷。"
+      ],
+      "qa_targets": [
+        "角色与Project Bible一致。",
+        "环境可辨识为福州古厝街巷。",
+        "没有官方Logo、饮品包装或乱码文字。"
+      ]
+    },
+    {
+      "shot_id": "S02",
+      "sequence": 2,
+      "duration_seconds": 5,
+      "purpose": "problem",
+      "description": "牛来与虎纠在三坊七巷奔跑，一颗巨大福州鱼丸从后方追来。",
+      "subject": "牛来、虎纠、巨大福州鱼丸、三坊七巷",
+      "action": "两人向镜头奔跑，巨大鱼丸沿石板路滚近，牛来大喊牛牛要丸了。",
+      "camera": "低机位广角向后稳定跟拍，突出古巷纵深与鱼丸逼近。",
+      "dialogue": [
+        {
+          "speaker": "牛来",
+          "line": "牛牛要丸了！"
+        }
+      ],
+      "on_screen_copy": "一个突如其来的离巷出走",
+      "continuity_anchors": [
+        "延续S01同一条主巷、角色造型和光线方向。",
+        "鱼丸为单颗暖白色圆形食物。",
+        "追逐不破坏人物、游客或历史建筑。"
+      ],
+      "qa_targets": [
+        "牛来与虎纠在前，巨大鱼丸在后。",
+        "鱼丸不被误生成石球、雪球或炸弹。",
+        "后期字卡准确显示“一个突如其来的离巷出走”。"
+      ]
+    },
+    {
+      "shot_id": "S03",
+      "sequence": 3,
+      "duration_seconds": 5,
+      "purpose": "cta",
+      "description": "牛来与虎纠在烟台山找到戴墨镜、穿花衬衫的第七巷，它表示自己只是在调休。",
+      "subject": "牛来、虎纠、第七巷、烟台山日落露台",
+      "action": "虎纠追问是否失踪，第七巷摘下一半墨镜回答自己在调休；镜头定格片名和CTA。",
+      "camera": "中景缓慢推进，调休台词后停住并保留文字安全区。",
+      "dialogue": [
+        {
+          "speaker": "虎纠",
+          "line": "你没失踪？"
+        },
+        {
+          "speaker": "第七巷",
+          "line": "没有，我只是在调休。"
+        }
+      ],
+      "on_screen_copy": "《第七巷今天调休》\n去三坊七巷，找到第七巷",
+      "continuity_anchors": [
+        "牛来和虎纠与前两镜保持一致。",
+        "第七巷保持数字7、花衬衫和墨镜识别特征。",
+        "地点明确为烟台山而非三坊七巷。"
+      ],
+      "qa_targets": [
+        "烟台山背景包含坡地绿荫、历史建筑气质和闽江暮色。",
+        "片名与CTA准确显示。",
+        "不出现官方Logo、饮品包装或政府背书。"
+      ]
+    }
+  ]
+}

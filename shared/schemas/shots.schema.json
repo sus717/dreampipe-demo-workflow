@@ -1,29 +1,122 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "DreamPipe Shots",
+  "$id": "https://dreampipe.dev/shared/schemas/shots.schema.json",
+  "title": "DreamPipe Shot List",
+  "description": "Model-agnostic creative storyboard compiled into provider-specific prompts by the Workflow Pod.",
   "type": "object",
-  "required": ["project_id", "shots"],
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_id",
+    "target_duration_seconds",
+    "aspect_ratio",
+    "shots"
+  ],
   "properties": {
-    "project_id": { "type": "string" },
+    "schema_version": { "const": "1.0" },
+    "project_id": { "$ref": "#/$defs/id" },
+    "target_duration_seconds": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 180
+    },
+    "aspect_ratio": { "enum": ["9:16", "16:9", "1:1", "4:5"] },
     "shots": {
       "type": "array",
+      "items": { "$ref": "#/$defs/shot" },
       "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": ["shot_id", "duration_seconds", "description", "qa_targets"],
-        "properties": {
-          "shot_id": { "type": "string" },
-          "duration_seconds": { "type": "number", "minimum": 0.1 },
-          "description": { "type": "string" },
-          "camera": { "type": "string" },
-          "subject": { "type": "string" },
-          "action": { "type": "string" },
-          "creative_intent": { "type": "string" },
-          "dialogue_or_caption": { "type": "string" },
-          "qa_targets": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
+      "maxItems": 24
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "dialogue_line": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["speaker", "line"],
+      "properties": {
+        "speaker": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "line": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "delivery": { "type": "string", "maxLength": 300 }
+      }
+    },
+    "shot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shot_id",
+        "sequence",
+        "duration_seconds",
+        "purpose",
+        "story_function",
+        "description",
+        "subject",
+        "action",
+        "scene",
+        "composition",
+        "camera",
+        "product_visibility",
+        "continuity_anchors",
+        "qa_targets"
+      ],
+      "properties": {
+        "shot_id": { "$ref": "#/$defs/id" },
+        "sequence": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "duration_seconds": { "type": "number", "exclusiveMinimum": 0, "maximum": 30 },
+        "purpose": { "enum": ["hook", "problem", "product", "benefit", "proof", "payoff", "cta"] },
+        "story_function": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 1200 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 800 },
+        "action": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "scene": { "type": "string", "minLength": 1, "maxLength": 800 },
+        "composition": { "type": "string", "minLength": 1, "maxLength": 800 },
+        "camera": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "lighting_override": { "type": "string", "maxLength": 500 },
+        "audio_direction": { "type": "string", "maxLength": 800 },
+        "dialogue": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/dialogue_line" },
+          "maxItems": 10
+        },
+        "voiceover_line": { "type": "string", "maxLength": 300 },
+        "on_screen_copy": { "type": "string", "maxLength": 300 },
+        "transition_out": { "type": "string", "maxLength": 300 },
+        "product_visibility": { "enum": ["hero", "visible", "implied", "not_visible"] },
+        "continuity_anchors": {
+          "description": "Shot-specific continuity constraints merged with the Project Bible by the Prompt Compiler.",
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "minItems": 1,
+          "maxItems": 12,
+          "uniqueItems": true
+        },
+        "qa_targets": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true
+        },
+        "risk_tags": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "PRODUCT_DRIFT",
+              "LOGO_DISTORTED",
+              "TEXT_GARBLED",
+              "STYLE_DRIFT",
+              "PROMPT_MISMATCH",
+              "LOW_QUALITY",
+              "BRAND_RISK"
+            ]
+          },
+          "uniqueItems": true,
+          "maxItems": 7
         }
       }
     }
