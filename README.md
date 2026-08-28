@@ -22,6 +22,25 @@ Record the real project commands after bootstrap:
 
 Replace the examples with the real commands discovered from this project. If a command is unknown, record the open question in `Harness/tasks/<task-id>/PROGRESS.md`.
 
+## DreamPipe Pipeline (Pod 3)
+
+The repository includes a LangGraph pipeline under `src/dreampipe/`. It supports
+the zero-cost Mock flow and an explicit Alibaba Cloud Bailian
+`happyhorse-1.1-i2v` provider adapter. See
+[`docs/pod3-to-pod2-handoff.md`](docs/pod3-to-pod2-handoff.md) for the Pod 2
+handoff and contract boundaries.
+
+Run the Mock flow with:
+
+```powershell
+$env:PYTHONPATH = ".venv_lib;src"
+python run_pipeline.py shared/brief.json --provider mock
+```
+
+Real generation requires `BAILIAN_API_KEY`, an optional
+`BAILIAN_WORKSPACE_ID`, and a public HTTP(S) product reference image URL.
+Credentials and private media are never stored in the repository.
+
 ## Git And Release Notes
 
 - Keep branch, commit, pull request, CI, and release conventions in this README.

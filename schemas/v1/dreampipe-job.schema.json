@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dreampipe.dev/schemas/v1/dreampipe-job.schema.json",
+  "title": "DreamPipe Job Contract",
+  "description": "Canonical state for one AI product-advertising video job.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "job_id", "status", "created_at", "updated_at", "assets", "product", "creative_brief", "cost"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "job_id": { "$ref": "#/$defs/id" },
+    "status": { "enum": ["UPLOADED", "ANALYZING_PRODUCT", "BRIEF_READY", "SCRIPT_READY", "BIBLE_READY", "STORYBOARD_READY", "PROMPTS_READY", "GENERATING", "QA_CHECKING", "RETRYING", "ASSEMBLING", "COMPLETED", "FAILED", "CANCELLED"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "assets": { "type": "array", "items": { "$ref": "#/$defs/asset" }, "minItems": 1 },
+    "product": { "$ref": "#/$defs/product" },
+    "creative_brief": { "$ref": "#/$defs/brief" },
+    "script": { "$ref": "#/$defs/script" },
+    "project_bible": { "$ref": "#/$defs/project_bible" },
+    "shots": { "type": "array", "items": { "$ref": "#/$defs/shot" } },
+    "generation_prompts": { "type": "array", "items": { "$ref": "#/$defs/generation_prompt" } },
+    "generation_results": { "type": "array", "items": { "$ref": "#/$defs/generation_result" } },
+    "qa_reports": { "type": "array", "items": { "$ref": "#/$defs/qa_report" } },
+    "render_manifest": { "$ref": "#/$defs/render_manifest" },
+    "cost": { "$ref": "#/$defs/cost" },
+    "error": { "type": "object" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$", "maxLength": 128 },
+    "asset": {
+      "type": "object", "additionalProperties": false,
+      "required": ["asset_id", "kind", "url", "mime_type"],
+      "properties": {
+        "asset_id": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["product_image", "keyframe", "video", "audio", "logo", "subtitle", "other"] },
+        "url": { "type": "string", "format": "uri" },
+        "mime_type": { "type": "string" },
+        "source_shot_id": { "$ref": "#/$defs/id" },
+        "duration_seconds": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "product": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "category", "source_asset_ids", "key_selling_points", "must_show", "must_avoid"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 }, "brand": { "type": "string" }, "category": { "type": "string", "minLength": 1 },
+        "source_asset_ids": { "type": "array", "items": { "$ref": "#/$defs/id" }, "minItems": 1 },
+        "appearance": { "type": "object" },
+        "key_selling_points": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "must_show": { "type": "array", "items": { "type": "string" } },
+        "must_avoid": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "brief": {
+      "type": "object", "additionalProperties": false,
+      "required": ["audience", "platform", "duration_seconds", "aspect_ratio", "tone", "cta", "language"],
+      "properties": {
+        "audience": { "type": "string", "minLength": 1 }, "platform": { "type": "string" },
+        "duration_seconds": { "type": "integer", "minimum": 5, "maximum": 180 }, "aspect_ratio": { "enum": ["9:16", "16:9", "1:1", "4:5"] },
+        "tone": { "type": "string", "minLength": 1 }, "style_pack": { "type": "string" }, "language": { "type": "string" },
+        "cta": { "type": "string", "minLength": 1 }, "budget_cny": { "type": "number", "minimum": 0 }
+      }
+    },
+    "script": { "type": "object", "required": ["concept", "hook", "narrative_structure", "voiceover", "cta_copy"] },
+    "project_bible": { "type": "object", "required": ["visual_theme", "product_invariants", "negative_constraints"] },
+    "shot": { "type": "object", "required": ["shot_id", "sequence", "duration_seconds", "purpose", "description", "camera", "product_visibility"] },
+    "generation_prompt": { "type": "object", "required": ["prompt_id", "shot_id", "version", "target_model", "prompt", "reference_asset_ids"] },
+    "generation_result": { "type": "object", "required": ["result_id", "shot_id", "prompt_id", "attempt", "status", "created_at"] },
+    "qa_report": { "type": "object", "required": ["report_id", "shot_id", "result_id", "status", "scores", "checked_at"] },
+    "render_manifest": { "type": "object", "required": ["composition_id", "video_asset_ids", "output_aspect_ratio"] },
+    "cost": { "type": "object", "required": ["budget_cny", "spent_cny"] }
+  }
+}
