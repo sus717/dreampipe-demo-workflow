@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DreamPipe Creative Brief",
+  "type": "object",
+  "required": [
+    "project_id",
+    "brand",
+    "product",
+    "location",
+    "audience",
+    "platform",
+    "duration_seconds",
+    "aspect_ratio",
+    "shot_count",
+    "budget",
+    "style",
+    "cta"
+  ],
+  "properties": {
+    "project_id": { "type": "string" },
+    "brand": { "type": "string" },
+    "product": {
+      "type": "object",
+      "required": ["name", "category", "reference_images", "core_selling_points"],
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "reference_images": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "core_selling_points": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "location": { "type": "string" },
+    "audience": { "type": "string" },
+    "platform": { "type": "string" },
+    "duration_seconds": { "type": "integer", "minimum": 1 },
+    "aspect_ratio": { "type": "string" },
+    "shot_count": { "type": "integer", "minimum": 1 },
+    "budget": {
+      "type": "object",
+      "required": ["amount", "currency"],
+      "properties": {
+        "amount": { "type": "number", "minimum": 0 },
+        "currency": { "type": "string" }
+      }
+    },
+    "style": { "type": "string" },
+    "brand_tone": { "type": "string" },
+    "must_show": {
+      "type": "object",
+      "properties": {
+        "packaging": { "type": "string" },
+        "logo": { "type": "string" },
+        "copy": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "prohibited": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "cta": { "type": "string" },
+    "model_plan": {
+      "type": "object",
+      "properties": {
+        "video_model_count": { "type": "integer", "minimum": 1 },
+        "preferred_video_model": { "type": "string" }
+      }
+    },
+    "objective": { "type": "string" },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}
+

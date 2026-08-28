@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DreamPipe Project Bible",
+  "type": "object",
+  "required": ["project_id", "creative_concept", "characters", "locations", "visual_style", "brand_rules"],
+  "properties": {
+    "project_id": { "type": "string" },
+    "creative_concept": { "type": "string" },
+    "tone": { "type": "string" },
+    "characters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "must_keep": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "locations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "visual_style": {
+      "type": "object",
+      "required": ["keywords", "color_palette", "camera_language"],
+      "properties": {
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "color_palette": { "type": "array", "items": { "type": "string" } },
+        "camera_language": { "type": "string" }
+      }
+    },
+    "brand_rules": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "negative_rules": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}
+

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DreamPipe Generation Result",
+  "type": "object",
+  "required": ["project_id", "results", "cost"],
+  "properties": {
+    "project_id": { "type": "string" },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["shot_id", "status", "asset_url", "qa_score", "attempts"],
+        "properties": {
+          "shot_id": { "type": "string" },
+          "status": { "type": "string", "enum": ["pending", "generating", "pass", "fail"] },
+          "asset_url": { "type": "string" },
+          "qa_score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "failure_reasons": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "repair_prompt": { "type": "string" },
+          "attempts": { "type": "integer", "minimum": 1 },
+          "model_used": { "type": "string" },
+          "cost": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "required": ["budget", "used", "currency"],
+      "properties": {
+        "budget": { "type": "number", "minimum": 0 },
+        "used": { "type": "number", "minimum": 0 },
+        "currency": { "type": "string" }
+      }
+    }
+  }
+}
+

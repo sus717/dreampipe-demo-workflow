@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DreamPipe Shots",
+  "type": "object",
+  "required": ["project_id", "shots"],
+  "properties": {
+    "project_id": { "type": "string" },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["shot_id", "duration_seconds", "description", "prompt", "qa_targets"],
+        "properties": {
+          "shot_id": { "type": "string" },
+          "duration_seconds": { "type": "number", "minimum": 0.1 },
+          "description": { "type": "string" },
+          "camera": { "type": "string" },
+          "subject": { "type": "string" },
+          "action": { "type": "string" },
+          "prompt": { "type": "string" },
+          "negative_prompt": { "type": "string" },
+          "model_hint": { "type": "string" },
+          "qa_targets": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
+
