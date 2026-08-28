@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "project_id": "dreampipe-demo-fuzhou-sanfangqixiang-niulai-20260828",
+  "status": "SUCCEEDED",
+  "current_step": "completed",
+  "progress": { "completed_steps": 8, "total_steps": 8, "percent": 100 },
+  "retry": {
+    "is_retrying": false,
+    "max_attempts": 3,
+    "shots": [
+      { "shot_id": "S01", "attempt": 1, "status": "PASSED" },
+      { "shot_id": "S02", "attempt": 2, "status": "PASSED" },
+      { "shot_id": "S03", "attempt": 1, "status": "PASSED" }
+    ]
+  },
+  "qa": {
+    "summary": { "passed": 3, "failed": 0, "pending": 0 },
+    "shots": [
+      { "shot_id": "S01", "status": "PASS", "scores": { "overall": 94 }, "failure_codes": [], "repair_instruction": "", "checked_at": "2026-08-28T15:31:00Z" },
+      { "shot_id": "S02", "status": "PASS", "scores": { "overall": 92 }, "failure_codes": [], "repair_instruction": "", "checked_at": "2026-08-28T15:31:15Z" },
+      { "shot_id": "S03", "status": "PASS", "scores": { "overall": 95 }, "failure_codes": [], "repair_instruction": "", "checked_at": "2026-08-28T15:31:20Z" }
+    ]
+  },
+  "error": null,
+  "final_output": {
+    "status": "READY",
+    "video_url": "https://media.example.com/dreampipe/final-ad.mp4",
+    "thumbnail_url": "https://media.example.com/dreampipe/final-ad.jpg",
+    "duration_seconds": 15,
+    "aspect_ratio": "9:16"
+  },
+  "updated_at": "2026-08-28T15:31:30Z"
+}

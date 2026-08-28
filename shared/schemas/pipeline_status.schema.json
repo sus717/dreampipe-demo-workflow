@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dreampipe.dev/shared/schemas/pipeline_status.schema.json",
+  "title": "DreamPipe Frontend Pipeline Status",
+  "description": "Read-only status projection for the frontend. It is derived from the LangGraph job and must not be used as a write contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "project_id", "status", "current_step", "progress", "retry", "qa", "error", "final_output", "updated_at"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "project_id": { "$ref": "#/$defs/id" },
+    "status": { "enum": ["QUEUED", "RUNNING", "RETRYING", "SUCCEEDED", "FAILED", "CANCELLED"] },
+    "current_step": { "enum": ["brief_normalize", "analyze_product", "create_script", "create_project_bible", "create_storyboard", "compile_prompts", "generate_shots", "qa_shots", "repair_prompts", "assemble_video", "completed", "failed", "cancelled"] },
+    "progress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["completed_steps", "total_steps", "percent"],
+      "properties": {
+        "completed_steps": { "type": "integer", "minimum": 0 },
+        "total_steps": { "type": "integer", "minimum": 1 },
+        "percent": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "retry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["is_retrying", "max_attempts", "shots"],
+      "properties": {
+        "is_retrying": { "type": "boolean" },
+        "max_attempts": { "type": "integer", "minimum": 1 },
+        "shots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["shot_id", "attempt", "status"],
+            "properties": {
+              "shot_id": { "$ref": "#/$defs/id" },
+              "attempt": { "type": "integer", "minimum": 1 },
+              "status": { "enum": ["PENDING", "GENERATING", "PASSED", "RETRYING", "FAILED"] },
+              "repair_instruction": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "qa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "shots"],
+      "properties": {
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["passed", "failed", "pending"],
+          "properties": {
+            "passed": { "type": "integer", "minimum": 0 },
+            "failed": { "type": "integer", "minimum": 0 },
+            "pending": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "shots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["shot_id", "status", "scores", "failure_codes", "checked_at"],
+            "properties": {
+              "shot_id": { "$ref": "#/$defs/id" },
+              "status": { "enum": ["PASS", "FAIL", "PENDING"] },
+              "scores": { "type": "object" },
+              "failure_codes": { "type": "array", "items": { "type": "string" } },
+              "repair_instruction": { "type": "string" },
+              "checked_at": { "type": ["string", "null"], "format": "date-time" }
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "step": { "type": "string" },
+        "shot_id": { "$ref": "#/$defs/id" },
+        "retryable": { "type": "boolean" }
+      }
+    },
+    "final_output": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["PENDING", "READY", "FAILED"] },
+        "video_url": { "type": "string", "format": "uri" },
+        "thumbnail_url": { "type": "string", "format": "uri" },
+        "duration_seconds": { "type": "number", "exclusiveMinimum": 0 },
+        "aspect_ratio": { "type": "string" }
+      }
+    },
+    "updated_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$", "minLength": 1, "maxLength": 128 }
+  }
+}

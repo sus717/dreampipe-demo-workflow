@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "project_id": "dreampipe-demo-fuzhou-sanfangqixiang-niulai-20260828",
+  "status": "RETRYING",
+  "current_step": "repair_prompts",
+  "progress": { "completed_steps": 7, "total_steps": 8, "percent": 87 },
+  "retry": {
+    "is_retrying": true,
+    "max_attempts": 3,
+    "shots": [
+      { "shot_id": "S01", "attempt": 1, "status": "PASSED" },
+      { "shot_id": "S02", "attempt": 1, "status": "RETRYING", "repair_instruction": "锁定首帧中的牛来角色外形，保持三坊七巷牌坊位置不变。" },
+      { "shot_id": "S03", "attempt": 1, "status": "PASSED" }
+    ]
+  },
+  "qa": {
+    "summary": { "passed": 2, "failed": 1, "pending": 0 },
+    "shots": [
+      { "shot_id": "S01", "status": "PASS", "scores": { "overall": 94 }, "failure_codes": [], "repair_instruction": "", "checked_at": "2026-08-28T15:30:00Z" },
+      { "shot_id": "S02", "status": "FAIL", "scores": { "overall": 72, "product_consistency": 61 }, "failure_codes": ["PRODUCT_DRIFT"], "repair_instruction": "锁定首帧中的牛来角色外形，保持三坊七巷牌坊位置不变。", "checked_at": "2026-08-28T15:30:05Z" },
+      { "shot_id": "S03", "status": "PASS", "scores": { "overall": 95 }, "failure_codes": [], "repair_instruction": "", "checked_at": "2026-08-28T15:30:10Z" }
+    ]
+  },
+  "error": null,
+  "final_output": { "status": "PENDING" },
+  "updated_at": "2026-08-28T15:30:10Z"
+}

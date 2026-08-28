@@ -56,7 +56,10 @@ class HappyHorseAdapterTests(unittest.TestCase):
 
     def test_provider_is_injected_into_langgraph_generation_node(self):
         root = Path(__file__).resolve().parents[1]
-        job = load_and_normalize(root / "shared" / "brief.json")
+        brief_path = root / "shared" / "brief.json"
+        if not brief_path.is_file():
+            brief_path = root / "shared" / "schemas" / "brief.schemav2.json"
+        job = load_and_normalize(brief_path)
         for asset in job["assets"]:
             asset["url"] = "https://example.com/product.png"
         final_state = build_mock_graph(provider=ImmediateProvider()).invoke({"job": job, "events": []})

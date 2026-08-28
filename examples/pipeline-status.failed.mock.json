@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "project_id": "dreampipe-demo-fuzhou-sanfangqixiang-niulai-20260828",
+  "status": "FAILED",
+  "current_step": "failed",
+  "progress": { "completed_steps": 5, "total_steps": 8, "percent": 62 },
+  "retry": { "is_retrying": false, "max_attempts": 3, "shots": [{ "shot_id": "S01", "attempt": 1, "status": "FAILED" }] },
+  "qa": { "summary": { "passed": 0, "failed": 0, "pending": 3 }, "shots": [{ "shot_id": "S01", "status": "PENDING", "scores": {}, "failure_codes": [], "repair_instruction": "", "checked_at": null }] },
+  "error": { "code": "VIDEO_PROVIDER_ERROR", "message": "HappyHorse task submission timed out.", "step": "generate_shots", "shot_id": "S01", "retryable": true },
+  "final_output": { "status": "FAILED" },
+  "updated_at": "2026-08-28T15:32:00Z"
+}

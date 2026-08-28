@@ -26,19 +26,20 @@ Replace the examples with the real commands discovered from this project. If a c
 
 The repository includes a LangGraph pipeline under `src/dreampipe/`. It supports
 the zero-cost Mock flow and an explicit Alibaba Cloud Bailian
-`happyhorse-1.1-i2v` provider adapter. See
-[`docs/pod3-to-pod2-handoff.md`](docs/pod3-to-pod2-handoff.md) for the Pod 2
-handoff and contract boundaries.
+`happyhorse-1.1-i2v` provider adapter. Workflow documentation is in
+[`docs/workflows/`](docs/workflows/), including the Pod 2 creative handoff and
+the Pod 4 frontend status contract.
 
 Run the Mock flow with:
 
 ```powershell
 $env:PYTHONPATH = ".venv_lib;src"
-python run_pipeline.py shared/brief.json --provider mock
+python scripts/run_pipeline.py shared/brief.json --provider mock
 ```
 
-Real generation requires `BAILIAN_API_KEY`, an optional
-`BAILIAN_WORKSPACE_ID`, and a public HTTP(S) product reference image URL.
+Real generation requires `BAILIAN_API_KEY`, configured API URLs in local
+`.env`, and a public HTTP(S) product reference image URL. Copy `.env.example`
+to an untracked `.env` before local development.
 Credentials and private media are never stored in the repository.
 
 ## Git And Release Notes
