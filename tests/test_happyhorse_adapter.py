@@ -60,8 +60,13 @@ class HappyHorseAdapterTests(unittest.TestCase):
         if not brief_path.is_file():
             brief_path = root / "shared" / "schemas" / "brief.schemav2.json"
         job = load_and_normalize(brief_path)
-        for asset in job["assets"]:
-            asset["url"] = "https://example.com/product.png"
+        job["product"]["source_asset_ids"] = ["asset_test_reference"]
+        job["assets"] = [{
+            "asset_id": "asset_test_reference",
+            "kind": "product_image",
+            "url": "https://example.com/product.png",
+            "mime_type": "image/png",
+        }]
         final_state = build_mock_graph(provider=ImmediateProvider()).invoke({"job": job, "events": []})
         self.assertEqual(final_state["job"]["status"], "COMPLETED")
         self.assertTrue(all(result["provider"] == "happyhorse-1.1-i2v" for result in final_state["job"]["generation_results"]))

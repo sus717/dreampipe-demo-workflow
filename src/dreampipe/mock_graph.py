@@ -71,6 +71,10 @@ def create_script(state: PipelineState) -> dict[str, Any]:
 
 def create_project_bible(state: PipelineState) -> dict[str, Any]:
     product = state["job"]["product"]
+    if product["source_asset_ids"]:
+        invariant = f"Keep the supplied {product['name']} reference assets unchanged."
+    else:
+        invariant = f"Keep {product['name']} recognizable from the Project Bible and approved reference assets once supplied."
     bible = {
         "visual_theme": {
             "palette": ["brand primary", "warm neutral", "clean white"],
@@ -80,7 +84,7 @@ def create_project_bible(state: PipelineState) -> dict[str, Any]:
             "motion_language": "one product action and one restrained camera move per shot"
         },
         "product_invariants": [
-            f"Keep the uploaded {product['name']} shape, proportions, colours and packaging unchanged.",
+            invariant,
             *product["must_show"]
         ],
         "brand_invariants": ["Only the supplied brand assets may appear."],
@@ -115,7 +119,7 @@ def compile_prompts(state: PipelineState, provider: VideoProvider | None = None)
             "target_model": provider.provider_name if provider is not None else "mock-video-provider",
             "generation_mode": "image_to_video",
             "reference_asset_ids": asset_ids,
-            "prompt": f"{shot['description']} Camera: {shot['camera']}. Keep the supplied {product['name']} unchanged. {job['project_bible']['visual_theme']['lighting']}. {shot['duration_seconds']} seconds.",
+            "prompt": f"{shot['description']} Camera: {shot['camera']}. Preserve {product['name']} and all Project Bible invariants. {job['project_bible']['visual_theme']['lighting']}. {shot['duration_seconds']} seconds.",
             "negative_prompt": "; ".join(job["project_bible"]["negative_constraints"]),
             "parameters": {"duration_seconds": shot["duration_seconds"], "aspect_ratio": job["creative_brief"]["aspect_ratio"]}
         })
@@ -157,6 +161,8 @@ def generate_shots(state: PipelineState, provider: VideoProvider | None = None) 
         provider_result: dict[str, Any] | None = None
         try:
             if provider is not None:
+                if not prompt["reference_asset_ids"]:
+                    raise ValueError("Provider generation requires at least one approved reference asset URL.")
                 reference_asset_id = prompt["reference_asset_ids"][0]
                 reference_asset = next(
                     (asset for asset in job["assets"] if asset["asset_id"] == reference_asset_id),

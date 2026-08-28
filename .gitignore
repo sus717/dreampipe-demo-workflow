@@ -42,3 +42,6 @@ Harness/wf-browser/cache/
 .env.*.local
 *.key
 *.pem
+
+# Runtime outputs
+outputs/

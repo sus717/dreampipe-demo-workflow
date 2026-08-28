@@ -12,15 +12,15 @@
 
 - Need Position 3/4 agreement on shared schema field names.
 - Need Position 5 confirmation of the fastest stable real generation route.
-- Need product reference image or generated packaging placeholder.
+- Need NiuLai, original Hujiu, and Sanfang Qixiang reference assets once they are actually available.
 
 ## DECISIONS
 
 - Product positioning: AIGC production pipeline, not AI video generator.
 - Demo should show process live, not only final video playback.
-- Final onsite demo case is fixed: Fuzhou Tourism + Sanfang Qixiang + NiuLai Universe.
+- Final onsite demo case is fixed: Fuzhou Tourism + Sanfang Qixiang + NiuLai Hujiu absurd teaser trailer.
 - Required demo flow is fixed: input brief -> storyboard -> generation -> QA -> failed-shot retry -> final output.
-- MVP is fixed as one product, 15 seconds, 9:16, 3 shots, one video model, one CTA.
+- MVP is fixed as one tourism destination experience, 15 seconds, 9:16, 3 shots, one video model, one CTA.
 - First end-to-end loop can use one forced/reproducible retry.
 - Frontend can start from mock JSON immediately.
 - Shared schema changes require human confirmation.
@@ -38,4 +38,3 @@ Demo readiness definition:
 - At least one shot shows FAIL -> prompt optimization -> regenerated PASS.
 - Cost changes after retry.
 - Final output screen is present even if media uses cached fallback.
-

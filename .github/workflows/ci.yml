@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - "pod*-*"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Python tests and contract checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate shared JSON files
+        run: |
+          python -m json.tool shared/brief.json > /dev/null
+          python -m json.tool shared/schemas/brief.schema.json > /dev/null
+          python -m json.tool shared/schemas/project_bible.schema.json > /dev/null
+          python -m json.tool shared/schemas/shots.schema.json > /dev/null
+          python -m json.tool shared/schemas/generation_result.schema.json > /dev/null
+          python -m json.tool schemas/v1/dreampipe-job.schema.json > /dev/null
+
+      - name: Run unit tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest discover -s tests -v
+

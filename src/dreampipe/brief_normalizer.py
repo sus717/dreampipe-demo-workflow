@@ -45,10 +45,10 @@ def _flatten_must_show(value: Any) -> list[str]:
 def normalize_brief_v2(source: dict[str, Any], *, source_path: str | None = None) -> dict[str, Any]:
     """Return a contract-shaped initial job without mutating the source Brief.
 
-    The source format is intentionally kept separate: `reference_images` become
-    stable asset IDs and `budget.amount/currency` becomes `budget_cny`. Location,
-    brand tone and source constraints are preserved in fields consumed by the
-    downstream agents rather than discarded.
+    The source format is intentionally kept separate: supplied `reference_images`
+    become stable asset IDs and `budget.amount/currency` becomes `budget_cny`.
+    Location, brand tone and source constraints are preserved in fields consumed
+    by the downstream agents rather than discarded.
     """
     required = ["project_id", "product", "audience", "platform", "duration_seconds", "aspect_ratio", "cta"]
     missing = [field for field in required if field not in source]
@@ -56,11 +56,9 @@ def normalize_brief_v2(source: dict[str, Any], *, source_path: str | None = None
         raise ValueError(f"Brief v2 missing required fields: {', '.join(missing)}")
     product_source = source["product"]
     reference_images = product_source.get("reference_images") or []
-    if not reference_images:
-        raise ValueError("Brief v2 product.reference_images must contain at least one image")
 
     assets: list[dict[str, Any]] = []
-    reference_asset_ids: list[str] = []
+    reference_asset_ids: list[str] = [str(item) for item in product_source.get("reference_asset_ids", [])]
     for index, reference in enumerate(reference_images, start=1):
         reference_string = str(reference)
         asset_id = f"asset_product_reference_{index}_{_slug(Path(reference_string).stem)}"

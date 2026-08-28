@@ -8,7 +8,7 @@ Judges should remember: DreamPipe does not just generate a video; it generates a
 
 The onsite demo case is fixed:
 
-Fuzhou Tourism + Sanfang Qixiang + NiuLai Universe.
+Fuzhou Tourism + Sanfang Qixiang + NiuLai Hujiu absurd teaser trailer.
 
 The flow must run through:
 
@@ -19,14 +19,14 @@ Input brief -> storyboard -> generation -> QA -> failed-shot retry -> final outp
 Use this fixed live brief:
 
 - Brand: Fuzhou Tourism
-- Product: NiuLai Sanfang Qixiang City Walk Drink
+- Experience: Sanfang Qixiang City Walk
 - Location: Sanfang Qixiang
 - Audience: 18-30
 - Platform: Douyin
 - Duration: 15 seconds
 - Aspect ratio: 9:16
 - Budget: RMB 30
-- Style: NiuLai Universe
+- Style: NiuLai Hujiu absurd teaser trailer
 
 ## Timeline
 
@@ -39,7 +39,7 @@ Use this fixed live brief:
 Show the Creative Brief form.
 
 Say:
-"We enter a real campaign brief: Fuzhou Tourism, Sanfang Qixiang, young Douyin audience, 15 seconds, RMB 30 budget, NiuLai Universe style."
+"We enter a real campaign brief: Fuzhou Tourism, Sanfang Qixiang, young Douyin audience, 15 seconds, RMB 30 budget, NiuLai Hujiu absurd teaser style."
 
 Click `Generate`.
 
@@ -94,4 +94,3 @@ Say:
 If real generation is unstable, keep the live pipeline interaction real and switch only final media to cached assets. State clearly:
 
 "For time stability, this final preview uses cached assets from the same pipeline run. The planning, QA, retry, and cost state are live."
-
