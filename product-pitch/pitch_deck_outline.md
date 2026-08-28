@@ -30,7 +30,7 @@ Creative Brief -> Creative Director -> Project Bible -> Storyboard -> Prompt Com
 
 ## Slide 6: Live Demo
 
-Fuzhou Tourism / Sanfang Qixiang / Douyin / 15 seconds / RMB 30 / NiuLai Universe.
+Fuzhou Tourism / Sanfang Qixiang / Douyin / 15 seconds / RMB 30 / NiuLai Hujiu absurd teaser trailer.
 
 Show the pipeline, not only the final video.
 
@@ -69,4 +69,3 @@ Generation models are good enough for production attempts, but the missing layer
 ## Slide 10: Closing
 
 Others generate a video. DreamPipe generates the production line.
-

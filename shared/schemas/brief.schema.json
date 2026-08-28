@@ -21,11 +21,11 @@
     "brand": { "type": "string" },
     "product": {
       "type": "object",
-      "required": ["name", "category", "reference_images", "core_selling_points"],
+      "required": ["name", "category", "reference_asset_ids", "core_selling_points"],
       "properties": {
         "name": { "type": "string" },
         "category": { "type": "string" },
-        "reference_images": {
+        "reference_asset_ids": {
           "type": "array",
           "items": { "type": "string" }
         },
@@ -57,6 +57,8 @@
       "properties": {
         "packaging": { "type": "string" },
         "logo": { "type": "string" },
+        "destination": { "type": "string" },
+        "characters": { "type": "string" },
         "copy": {
           "type": "array",
           "items": { "type": "string" }
@@ -82,4 +84,3 @@
     }
   }
 }
-

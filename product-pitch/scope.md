@@ -35,7 +35,7 @@ P2 is optional and must not block P0/P1:
 
 - Multi-model router.
 - Multiple style skills.
-- NiuLai Universe style pack.
+- NiuLai Hujiu absurd teaser style pack.
 - Auto assembly with TTS, BGM, subtitles, and final MP4.
 
 ## Recommended Hackathon Cut
@@ -51,14 +51,14 @@ The product claim is the pipeline, not visual perfection.
 Onsite demo:
 
 - Brand: Fuzhou Tourism
-- Product: NiuLai Sanfang Qixiang City Walk Drink
+- Experience: Sanfang Qixiang City Walk
 - Location: Sanfang Qixiang
 - Audience: 18-30
 - Platform: Douyin
 - Duration: 15 seconds
 - Aspect ratio: 9:16
 - Budget: RMB 30
-- Style: NiuLai Universe
+- Style: NiuLai Hujiu absurd teaser trailer
 
 Required flow:
 
@@ -70,4 +70,3 @@ Input brief -> storyboard -> generation -> QA -> failed-shot retry -> final outp
 - Do not build a general video editor.
 - Do not overbuild multi-model routing before the end-to-end loop works.
 - Do not make a demo that only plays a pre-rendered video.
-

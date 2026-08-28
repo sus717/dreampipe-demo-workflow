@@ -32,7 +32,7 @@ Real model latency and output instability during live demo. Mitigation: keep pla
 
 Use a QA score composed from prompt alignment, visual quality, style consistency, character/location consistency, and brand compliance. For hackathon MVP, at least one category-level failure reason must drive a retry prompt.
 
-## Q8: Why is NiuLai Universe relevant?
+## Q8: Why is the NiuLai Hujiu absurd teaser style relevant?
 
 It proves style skills are pluggable. The same pipeline can produce tourism, corporate, cinematic, social viral, or a custom showcase style without changing the orchestration logic.
 
@@ -43,4 +43,3 @@ Production-grade model adapters, brand asset ingestion, stronger vision QA, cost
 ## Q10: What if QA is wrong?
 
 QA is not treated as absolute truth. It is a control signal. Human review can override it, and repeated production data can improve scoring thresholds.
-

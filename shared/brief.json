@@ -2,15 +2,13 @@
   "project_id": "dreampipe-demo-fuzhou-sanfangqixiang-niulai-20260828",
   "brand": "Fuzhou Tourism",
   "product": {
-    "name": "NiuLai Sanfang Qixiang City Walk Drink",
-    "category": "tourism co-branded ready-to-drink beverage",
-    "reference_images": [
-      "assets/reference/niulai-city-walk-drink-packaging.png"
-    ],
+    "name": "Sanfang Qixiang City Walk Experience",
+    "category": "tourism destination / cultural city-walk experience",
+    "reference_asset_ids": [],
     "core_selling_points": [
-      "Fuzhou Sanfang Qixiang cultural landmark co-branding",
-      "Young, surreal, meme-friendly NiuLai Universe visual identity",
-      "Designed for short-video sharing and city-walk check-in moments"
+      "Sanfang Qixiang as a recognizable Fuzhou cultural landmark",
+      "Absurd NiuLai and original Hujiu teaser style for young short-video audiences",
+      "A 15-second story hook that turns city-walk tourism into a shareable mini trailer"
     ]
   },
   "location": "Sanfang Qixiang, Fuzhou",
@@ -23,35 +21,35 @@
     "amount": 30,
     "currency": "RMB"
   },
-  "style": "NiuLai Universe",
-  "brand_tone": "young, energetic, playful, culturally rooted, surreal but still tourism-friendly",
+  "style": "NiuLai Hujiu absurd teaser trailer",
+  "brand_tone": "young, playful, absurd, culturally rooted, trailer-like, tourism-friendly",
   "must_show": {
-    "packaging": "A vertical slim can or bottle with Fuzhou Tourism x NiuLai co-branded packaging, visible in the final shot.",
-    "logo": "Fuzhou Tourism logo and NiuLai Universe logo must appear clearly on the packaging or end card.",
+    "destination": "Sanfang Qixiang must be recognizable as the core tourism destination.",
+    "characters": "NiuLai and original Hujiu-style absurd teaser elements should appear as the creative hook after reference assets are available.",
     "copy": [
-      "NiuLai Sanfang Qixiang",
-      "Fuzhou City Walk New Entry",
-      "Start now and meet NiuLai at Sanfang Qixiang"
+      "Sanfang Qixiang has only six lanes left",
+      "NiuNiu is in trouble",
+      "The seventh lane is just on shift break"
     ]
   },
   "prohibited": [
-    "Do not claim medical, health, weight-loss, or functional beverage benefits.",
-    "Do not imply official government endorsement beyond Fuzhou Tourism campaign branding.",
-    "Do not show distorted, unreadable, or fake-looking brand/logo text in close-up shots.",
+    "Do not invent a physical drink product, packaging, or official co-branded logo.",
+    "Do not imply official government endorsement beyond the demo's tourism campaign framing.",
+    "Do not use unconfirmed logos, unlicensed brand marks, or fake official seals.",
     "Do not use unsafe, violent, politically sensitive, or horror imagery.",
     "Do not make Sanfang Qixiang look like a generic non-Chinese city street."
   ],
-  "cta": "Start now and meet NiuLai at Sanfang Qixiang",
+  "cta": "Go to Sanfang Qixiang and find the seventh lane",
   "model_plan": {
     "video_model_count": 1,
     "preferred_video_model": "TBD by Position 5"
   },
-  "objective": "Create a 15-second vertical Douyin demo ad that proves DreamPipe can turn a structured brief into storyboard, generation, QA, failed-shot retry, and final output.",
+  "objective": "Create a 15-second vertical Douyin absurd tourism teaser that proves DreamPipe can turn a structured brief into storyboard, generation, QA, failed-shot retry, and final output.",
   "constraints": [
-    "MVP uses one product, three shots, one video model, and one CTA.",
+    "MVP uses one tourism destination experience, three shots, one video model, and one CTA.",
     "The demo must show input brief, storyboard, generation, QA, failed-shot retry, and final output.",
     "At least one shot should intentionally fail QA first, then pass after prompt repair and retry.",
-    "Use the same project_id for project_bible.json, shots.json, and generation_result.json."
+    "Use the same project_id for project_bible.json, shots.json, and generation_result.json.",
+    "Position 2 should not write model-specific prompts in shots.json; prompts are produced by Position 3's Prompt Compiler."
   ]
 }
-

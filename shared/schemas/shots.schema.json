@@ -10,7 +10,7 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["shot_id", "duration_seconds", "description", "prompt", "qa_targets"],
+        "required": ["shot_id", "duration_seconds", "description", "qa_targets"],
         "properties": {
           "shot_id": { "type": "string" },
           "duration_seconds": { "type": "number", "minimum": 0.1 },
@@ -18,9 +18,8 @@
           "camera": { "type": "string" },
           "subject": { "type": "string" },
           "action": { "type": "string" },
-          "prompt": { "type": "string" },
-          "negative_prompt": { "type": "string" },
-          "model_hint": { "type": "string" },
+          "creative_intent": { "type": "string" },
+          "dialogue_or_caption": { "type": "string" },
           "qa_targets": {
             "type": "array",
             "items": { "type": "string" }
@@ -30,4 +29,3 @@
     }
   }
 }
-
