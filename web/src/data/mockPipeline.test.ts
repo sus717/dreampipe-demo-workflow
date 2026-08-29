@@ -26,4 +26,10 @@ describe('DreamPipe mock runtime', () => {
     ])
     expect(completed.retry.scoreAfter).toBe(88)
   })
+
+  it('recomputes precheck from a custom user idea', () => {
+    const custom = getMockPipeline('waiting', '电影级超长大片，大量复杂多角色，十几个镜头，震撼梦幻赛博。')
+    expect(custom.ideaPrecheck.idea).toContain('电影级超长大片')
+    expect(custom.ideaPrecheck.tokenLoadScore).toBeLessThan(70)
+  })
 })

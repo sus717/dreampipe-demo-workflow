@@ -3,15 +3,19 @@ import AutoAwesomeRounded from '@mui/icons-material/AutoAwesomeRounded'
 import FullscreenRounded from '@mui/icons-material/FullscreenRounded'
 import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded'
 import SendRounded from '@mui/icons-material/SendRounded'
-import { Box, Button, Chip, IconButton, Paper, Stack, Typography } from '@mui/material'
+import { Box, Button, Chip, IconButton, Paper, Stack, TextField, Typography } from '@mui/material'
 import type { PipelineViewModel } from '../types/pipeline'
 
 interface CopilotPanelProps {
   model: PipelineViewModel
+  idea: string
+  onIdeaChange: (idea: string) => void
   onPrimaryAction: () => void
 }
 
-export function CopilotPanel({ model, onPrimaryAction }: CopilotPanelProps) {
+export function CopilotPanel({ model, idea, onIdeaChange, onPrimaryAction }: CopilotPanelProps) {
+  const canSubmit = idea.trim().length > 0
+
   return (
     <Box component="aside" className="copilot-column" data-animate="panel">
       <Paper className="copilot-card surface-panel" elevation={0}>
@@ -46,9 +50,32 @@ export function CopilotPanel({ model, onPrimaryAction }: CopilotPanelProps) {
           {model.assistant.action}
         </Button>
 
-        <Box className="prompt-shell">
-          <Typography>告诉牛导你的想法…</Typography>
-          <IconButton size="small" aria-label="发送，暂未接后端" disabled>
+        <Box
+          component="form"
+          className="prompt-shell prompt-shell-live"
+          onSubmit={(event) => {
+            event.preventDefault()
+            if (canSubmit) onPrimaryAction()
+          }}
+        >
+          <TextField
+            value={idea}
+            onChange={(event) => onIdeaChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault()
+                if (canSubmit) onPrimaryAction()
+              }
+            }}
+            placeholder="输入你的创意想法，左上角会实时预检..."
+            variant="standard"
+            multiline
+            minRows={2}
+            maxRows={3}
+            fullWidth
+            slotProps={{ input: { disableUnderline: true } }}
+          />
+          <IconButton size="small" aria-label="发送创意并开始演示" type="submit" disabled={!canSubmit}>
             <SendRounded />
           </IconButton>
         </Box>

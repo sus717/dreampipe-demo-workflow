@@ -10,7 +10,7 @@ import { usePipelineDemo } from './hooks/usePipelineDemo'
 
 export function App() {
   const root = useRef<HTMLDivElement>(null)
-  const { model, phase, phases, selectPhase, runDemo, performPrimaryAction } = usePipelineDemo()
+  const { idea, model, phase, phases, selectPhase, runDemo, performPrimaryAction, setIdea } = usePipelineDemo()
 
   useLayoutEffect(() => {
     const context = gsap.context(() => {
@@ -50,7 +50,7 @@ export function App() {
       <Box className="workspace-grid">
         <ContractPanel model={model} />
         <PipelineBoard model={model} />
-        <CopilotPanel model={model} onPrimaryAction={performPrimaryAction} />
+        <CopilotPanel model={model} idea={idea} onIdeaChange={setIdea} onPrimaryAction={performPrimaryAction} />
       </Box>
       <RuntimeRail model={model} />
     </Box>

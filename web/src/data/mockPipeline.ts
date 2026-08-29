@@ -7,7 +7,7 @@ const images = {
   S03: '/assets/S03-day-off-reveal.png',
 } as const
 
-const demoIdea = '福州三坊七巷 City Walk 15s 竖屏短片：牛导发现三坊七巷只剩六巷，虎纠冲进古巷，结尾反转第七巷今日调休，CTA 来三坊七巷找到你的第七巷。'
+export const defaultDemoIdea = '福州三坊七巷 City Walk 15s 竖屏短片：牛导发现三坊七巷只剩六巷，虎纠冲进古巷，结尾反转第七巷今日调休，CTA 来三坊七巷找到你的第七巷。'
 
 const baseStages = [
   ['brief', '需求', 'Brief 解析'],
@@ -175,11 +175,11 @@ const stateCopy: Record<DemoPhase, Omit<PipelineViewModel, 'phase' | 'ideaPreche
 
 export const demoOrder: DemoPhase[] = ['waiting', 'running', 'retrying', 'completed']
 
-export function getMockPipeline(phase: DemoPhase): PipelineViewModel {
+export function getMockPipeline(phase: DemoPhase, idea = defaultDemoIdea): PipelineViewModel {
   return {
     phase,
     ...stateCopy[phase],
-    ideaPrecheck: evaluateIdeaPrecheck(demoIdea),
+    ideaPrecheck: evaluateIdeaPrecheck(idea),
     stages: stageStates(phase),
     shots: shotStates(phase),
   }

@@ -1,11 +1,12 @@
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { demoOrder, getMockPipeline } from '../data/mockPipeline'
+import { defaultDemoIdea, demoOrder, getMockPipeline } from '../data/mockPipeline'
 import type { DemoPhase } from '../types/pipeline'
 
 export function usePipelineDemo() {
   const [phase, setPhase] = useState<DemoPhase>('retrying')
+  const [idea, setIdea] = useState(defaultDemoIdea)
   const timers = useRef<number[]>([])
-  const model = useMemo(() => getMockPipeline(phase), [phase])
+  const model = useMemo(() => getMockPipeline(phase, idea), [idea, phase])
 
   const clearTimers = useCallback(() => {
     timers.current.forEach(window.clearTimeout)
@@ -44,5 +45,5 @@ export function usePipelineDemo() {
 
   useEffect(() => clearTimers, [clearTimers])
 
-  return { model, phase, phases: demoOrder, selectPhase, runDemo, performPrimaryAction }
+  return { idea, model, phase, phases: demoOrder, selectPhase, runDemo, performPrimaryAction, setIdea }
 }
