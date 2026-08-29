@@ -26,6 +26,16 @@ export interface PipelineViewModel {
   statusDetail: string
   progress: number
   readiness: number
+  ideaPrecheck: {
+    idea: string
+    overallScore: number
+    tokenLoadScore: number
+    viralScore: number
+    estimatedTokens: number
+    verdict: 'ready' | 'revise' | 'risky'
+    highlights: string[]
+    warnings: string[]
+  }
   activeStageId: string
   stages: PipelineStage[]
   shots: ShotStatus[]
