@@ -13,6 +13,10 @@ venv/
 # Node / TypeScript
 node_modules/
 dist-ts/
+web/dist/
+web/coverage/
+web/test-results/
+web/playwright-report/
 *.tsbuildinfo
 
 # IDE

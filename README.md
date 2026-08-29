@@ -54,6 +54,28 @@ Real generation requires `BAILIAN_API_KEY`, configured API URLs in local
 to an untracked `.env` before local development.
 Credentials and private media are never stored in the repository.
 
+## DreamPipe Web Control Tower
+
+The frontend prototype lives in `web/` and uses React, TypeScript, Vite 7,
+MUI, and GSAP. It runs against deterministic local demo states while the
+backend is unavailable. The WebSocket boundary is reserved but inert unless
+`VITE_PIPELINE_WS_URL` is explicitly configured.
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+Validation commands:
+
+```bash
+cd web
+npm run typecheck
+npm test
+npm run build
+```
+
 ## Git And Release Notes
 
 - Keep branch, commit, pull request, CI, and release conventions in this README.
