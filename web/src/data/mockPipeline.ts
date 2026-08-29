@@ -1,10 +1,13 @@
 import type { DemoPhase, PipelineStage, PipelineViewModel, ShotStatus } from '../types/pipeline'
+import { evaluateIdeaPrecheck } from './ideaPrecheck'
 
 const images = {
   S01: '/assets/S01-crisis.png',
   S02: '/assets/S02-fishball-chase.png',
   S03: '/assets/S03-day-off-reveal.png',
 } as const
+
+const demoIdea = '福州三坊七巷 City Walk 15s 竖屏短片：牛导发现三坊七巷只剩六巷，虎纠冲进古巷，结尾反转第七巷今日调休，CTA 来三坊七巷找到你的第七巷。'
 
 const baseStages = [
   ['brief', '需求', 'Brief 解析'],
@@ -86,7 +89,7 @@ function shotStates(phase: DemoPhase): ShotStatus[] {
   return mutable
 }
 
-const stateCopy: Record<DemoPhase, Omit<PipelineViewModel, 'phase' | 'stages' | 'shots'>> = {
+const stateCopy: Record<DemoPhase, Omit<PipelineViewModel, 'phase' | 'ideaPrecheck' | 'stages' | 'shots'>> = {
   waiting: {
     statusLabel: '等待资产',
     statusDetail: '创作合同已冻结，WebSocket 后端尚未接入',
@@ -176,6 +179,7 @@ export function getMockPipeline(phase: DemoPhase): PipelineViewModel {
   return {
     phase,
     ...stateCopy[phase],
+    ideaPrecheck: evaluateIdeaPrecheck(demoIdea),
     stages: stageStates(phase),
     shots: shotStates(phase),
   }

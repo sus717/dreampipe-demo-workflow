@@ -1,34 +1,33 @@
 import CheckCircleRounded from '@mui/icons-material/CheckCircleRounded'
 import ErrorOutlineRounded from '@mui/icons-material/ErrorOutlineRounded'
-import ExploreRounded from '@mui/icons-material/ExploreRounded'
-import Groups2Rounded from '@mui/icons-material/Groups2Rounded'
-import PaymentsOutlined from '@mui/icons-material/PaymentsOutlined'
-import SmartDisplayOutlined from '@mui/icons-material/SmartDisplayOutlined'
-import TimerOutlined from '@mui/icons-material/TimerOutlined'
-import { Box, Chip, CircularProgress, Divider, Paper, Stack, Typography } from '@mui/material'
+import LocalFireDepartmentRounded from '@mui/icons-material/LocalFireDepartmentRounded'
+import SpeedRounded from '@mui/icons-material/SpeedRounded'
+import TokenRounded from '@mui/icons-material/TokenRounded'
+import { Box, Chip, CircularProgress, Divider, LinearProgress, Paper, Stack, Typography } from '@mui/material'
 import type { PipelineViewModel } from '../types/pipeline'
-
-const contractRows = [
-  { icon: <ExploreRounded />, label: '目的地', value: '福州 · 三坊七巷' },
-  { icon: <Groups2Rounded />, label: '受众', value: '18–30 岁城市漫游人群' },
-  { icon: <SmartDisplayOutlined />, label: '渠道', value: '抖音 · 竖屏' },
-  { icon: <TimerOutlined />, label: '交付', value: '15s · 9:16 · 3 镜' },
-  { icon: <PaymentsOutlined />, label: '预算', value: '¥30 CNY' },
-]
 
 interface ContractPanelProps {
   model: PipelineViewModel
 }
 
+const verdictCopy = {
+  ready: '可以开跑',
+  revise: '建议微调',
+  risky: '先别生成',
+} as const
+
 export function ContractPanel({ model }: ContractPanelProps) {
-  const waiting = model.phase === 'waiting'
+  const precheck = model.ideaPrecheck
+  const risky = precheck.verdict === 'risky'
+  const revise = precheck.verdict === 'revise'
+  const ringColor = risky ? 'error' : revise ? 'warning' : 'success'
 
   return (
     <Paper component="aside" className="contract-panel surface-panel" elevation={0} data-animate="panel">
       <Box className="panel-heading">
         <Box>
-          <Typography className="eyebrow">PRODUCTION CONTRACT</Typography>
-          <Typography variant="h3">生产前置检查</Typography>
+          <Typography className="eyebrow">IDEA PRECHECK</Typography>
+          <Typography variant="h3">创意前置检查</Typography>
         </Box>
         <Box className="panel-menu">•••</Box>
       </Box>
@@ -38,48 +37,56 @@ export function ContractPanel({ model }: ContractPanelProps) {
           <CircularProgress variant="determinate" value={100} className="ring-track" size={132} thickness={3.2} />
           <CircularProgress
             variant="determinate"
-            value={model.readiness}
-            color={waiting ? 'warning' : 'success'}
+            value={precheck.overallScore}
+            color={ringColor}
             size={132}
             thickness={3.2}
           />
           <Box className="ring-label">
-            <Typography className="ring-value">{model.readiness}%</Typography>
-            <Typography>{waiting ? '3 / 4 READY' : 'READY'}</Typography>
+            <Typography className="ring-value">{precheck.overallScore}</Typography>
+            <Typography>{verdictCopy[precheck.verdict]}</Typography>
           </Box>
         </Box>
         <Typography className="readiness-copy">
-          {waiting ? '创作规则已锁定，参考资产仍在门禁中。' : 'Brief、Bible、分镜与资产均已通过预检。'}
+          预计 {precheck.estimatedTokens} tokens，先判断是否值得进入生成流程。
         </Typography>
       </Box>
 
       <Divider />
 
-      <Stack className="contract-rows">
-        {contractRows.map((row) => (
-          <Box className="contract-row" key={row.label}>
-            <Box className="contract-icon">{row.icon}</Box>
-            <Typography className="contract-label">{row.label}</Typography>
-            <Typography className="contract-value">{row.value}</Typography>
-          </Box>
-        ))}
+      <Box className="idea-card">
+        <Typography className="idea-label">用户想法</Typography>
+        <Typography className="idea-copy">{precheck.idea}</Typography>
+      </Box>
+
+      <Stack className="score-list">
+        <Box className="score-row">
+          <Box className="score-title"><TokenRounded /><Typography>Token 成本</Typography></Box>
+          <Typography className="score-value">{precheck.tokenLoadScore}</Typography>
+          <LinearProgress variant="determinate" value={precheck.tokenLoadScore} color={precheck.tokenLoadScore < 70 ? 'warning' : 'success'} />
+        </Box>
+        <Box className="score-row">
+          <Box className="score-title"><LocalFireDepartmentRounded /><Typography>爆款概率</Typography></Box>
+          <Typography className="score-value">{precheck.viralScore}</Typography>
+          <LinearProgress variant="determinate" value={precheck.viralScore} color={precheck.viralScore < 70 ? 'warning' : 'secondary'} />
+        </Box>
       </Stack>
 
-      <Chip icon={<span>🔥</span>} label="热点适配器 · City Walk" className="trend-chip" />
+      <Chip icon={<SpeedRounded />} label="进入生成前先省一次试错成本" className="trend-chip" />
 
       <Stack className="gate-list" spacing={0.8}>
-        <Box className="gate-item gate-pass">
-          <CheckCircleRounded />
-          <span>创意合同与三镜分镜已冻结</span>
-        </Box>
-        <Box className="gate-item gate-pass">
-          <CheckCircleRounded />
-          <span>品牌红线与 CTA 已校验</span>
-        </Box>
-        <Box className={`gate-item ${waiting ? 'gate-warn' : 'gate-pass'}`}>
-          {waiting ? <ErrorOutlineRounded /> : <CheckCircleRounded />}
-          <span>{waiting ? '真实参考素材 URL 待接入' : '演示资产已锁定'}</span>
-        </Box>
+        {precheck.highlights.map((item) => (
+          <Box className="gate-item gate-pass" key={item}>
+            <CheckCircleRounded />
+            <span>{item}</span>
+          </Box>
+        ))}
+        {precheck.warnings.slice(0, 2).map((item) => (
+          <Box className="gate-item gate-warn" key={item}>
+            <ErrorOutlineRounded />
+            <span>{item}</span>
+          </Box>
+        ))}
       </Stack>
     </Paper>
   )
