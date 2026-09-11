@@ -33,7 +33,7 @@ export function usePipelineDemo() {
 
   const performPrimaryAction = useCallback(() => {
     if (phase === 'completed') {
-      selectPhase('retrying')
+      runDemo()
       return
     }
     if (phase === 'retrying') {

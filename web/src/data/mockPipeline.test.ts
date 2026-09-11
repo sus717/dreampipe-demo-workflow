@@ -12,7 +12,7 @@ describe('DreamPipe mock runtime', () => {
     expect(retrying.shots.find((shot) => shot.id === 'S03')).toMatchObject({
       state: 'retrying',
       attempt: 1,
-      score: 64,
+      score: 78,
     })
     expect(retrying.shots.filter((shot) => shot.state === 'passed')).toHaveLength(2)
   })
@@ -24,7 +24,8 @@ describe('DreamPipe mock runtime', () => {
       { id: 'S02', attempt: 1, state: 'passed' },
       { id: 'S03', attempt: 2, state: 'passed' },
     ])
-    expect(completed.retry.scoreAfter).toBe(88)
+    expect(completed.retry.scoreAfter).toBe(95)
+    expect(completed.preview.ready).toBe(false)
   })
 
   it('recomputes precheck from a custom user idea', () => {

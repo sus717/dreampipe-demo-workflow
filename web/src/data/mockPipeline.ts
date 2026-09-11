@@ -1,10 +1,11 @@
 import type { DemoPhase, PipelineStage, PipelineViewModel, ShotStatus } from '../types/pipeline'
 import { evaluateIdeaPrecheck } from './ideaPrecheck'
+import demo from './pipelineDemo.generated.json'
 
 const images = {
-  S01: '/assets/S01-crisis.png',
-  S02: '/assets/S02-fishball-chase.png',
-  S03: '/assets/S03-day-off-reveal.png',
+  S01: `${import.meta.env.BASE_URL}assets/S01-crisis.png`,
+  S02: `${import.meta.env.BASE_URL}assets/S02-fishball-chase.png`,
+  S03: `${import.meta.env.BASE_URL}assets/S03-day-off-reveal.png`,
 } as const
 
 export const defaultDemoIdea = '福州三坊七巷 City Walk 15s 竖屏短片：牛导发现三坊七巷只剩六巷，虎纠冲进古巷，结尾反转第七巷今日调休，CTA 来三坊七巷找到你的第七巷。'
@@ -151,7 +152,7 @@ const stateCopy: Record<DemoPhase, Omit<PipelineViewModel, 'phase' | 'ideaPreche
     preview: { label: 'Shot 03 · Attempt 1', image: images.S03, ready: false },
   },
   completed: {
-    statusLabel: '可交付',
+    statusLabel: '模拟完成',
     statusDetail: 'S03 Attempt 2 通过 · 15 秒成片就绪',
     progress: 100,
     readiness: 100,
@@ -160,7 +161,7 @@ const stateCopy: Record<DemoPhase, Omit<PipelineViewModel, 'phase' | 'ideaPreche
       badge: '交付检查完成',
       headline: '三镜通过，荒诞感保住了。',
       body: '角色、地点、CTA 安全区与预算均通过演示门槛，可进入现场播放。',
-      action: '播放最终成片',
+      action: '重新演示流程',
     },
     retry: {
       scoreBefore: 64,
@@ -176,11 +177,45 @@ const stateCopy: Record<DemoPhase, Omit<PipelineViewModel, 'phase' | 'ideaPreche
 export const demoOrder: DemoPhase[] = ['waiting', 'running', 'retrying', 'completed']
 
 export function getMockPipeline(phase: DemoPhase, idea = defaultDemoIdea): PipelineViewModel {
-  return {
+  const snapshot = demo.snapshots[phase]
+  const status = snapshot.status
+  const model: PipelineViewModel = {
     phase,
     ...stateCopy[phase],
     ideaPrecheck: evaluateIdeaPrecheck(idea),
     stages: stageStates(phase),
     shots: shotStates(phase),
   }
+  // Use the Python graph's contract for runtime facts, keeping UI copy separate.
+  model.progress = status.progress.percent
+  model.runtime.spent = snapshot.cost.spent_cny
+  model.runtime.qaPassed = status.qa.summary.passed
+  model.runtime.eta = phase === 'completed' ? 'MOCK' : '--:--'
+  model.shots = model.shots.map((shot) => {
+    const qa = status.qa.shots.find((item) => item.shot_id === shot.id)
+    const retry = status.retry.shots.find((item) => item.shot_id === shot.id)
+    return { ...shot, attempt: retry?.attempt ?? 1,
+      score: qa && 'overall' in qa.scores ? qa.scores.overall : undefined,
+      state: qa?.status === 'PASS' ? 'passed' : retry?.status === 'RETRYING' ? 'retrying' : phase === 'running' ? 'generating' : 'waiting' }
+  })
+  const failed = demo.snapshots.retrying.status.qa.shots.find((shot) => shot.shot_id === 'S03')!
+  model.retry.scoreBefore = failed.scores.overall
+  model.retry.scoreAfter = phase === 'completed' ? demo.snapshots.completed.status.qa.shots.find((shot) => shot.shot_id === 'S03')!.scores.overall : undefined
+  model.retry.issue = phase === 'completed' ? 'S03 已通过 Mock QA' : failed.failure_codes.join(' · ')
+  model.retry.repairInstruction = failed.repair_instruction
+  model.stages = model.stages.map((stage) => stage.id === 'qa' ? {
+    ...stage, meta: phase === 'retrying' ? `S03 · ${model.retry.scoreBefore} FAIL` : phase === 'completed' ? '3 / 3 PASS' : '等待 QA',
+  } : stage)
+  model.preview.ready = false
+  model.preview.label = '分镜概念图 · 非生成视频'
+  model.statusDetail = phase === 'completed' ? 'Mock 流水线已通过 · 尚未生成真实成片' : `Python Mock 状态回放 · ${status.current_step}`
+  if (phase === 'completed') {
+    model.assistant.headline = '三镜通过 Mock QA，可继续检查未实现项。'
+    model.assistant.body = '此处只有概念图和状态回放。真实视频、配音与成片合成尚未接入网页。'
+  }
+  if (phase === 'running') {
+    model.assistant.headline = '三镜模拟生成完成，等待 Mock QA。'
+    model.assistant.body = '状态来自共享分镜驱动的 Python 流水线，不代表真实模型调用。'
+  }
+  return model
 }

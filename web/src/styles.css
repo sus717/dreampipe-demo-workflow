@@ -31,7 +31,7 @@ body,
 }
 
 body {
-  overflow: hidden;
+  overflow: auto;
   background:
     radial-gradient(circle at 76% -12%, rgba(242, 173, 61, 0.08), transparent 32%),
     radial-gradient(circle at 28% 112%, rgba(66, 214, 186, 0.06), transparent 36%),
@@ -48,11 +48,11 @@ textarea {
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-rows: 68px minmax(0, 1fr) 54px;
+  grid-template-rows: 68px auto minmax(680px, 1fr) 54px;
   width: 100vw;
-  height: 100dvh;
-  min-height: 660px;
-  overflow: hidden;
+  height: max(900px, 100dvh);
+  min-height: 100dvh;
+  overflow: visible;
   color: var(--text);
 }
 
@@ -1480,7 +1480,7 @@ textarea {
 
 @media (max-height: 760px) and (min-width: 1051px) {
   .app-shell {
-    grid-template-rows: 58px minmax(0, 1fr) 48px;
+    grid-template-rows: 58px auto minmax(620px, 1fr) 48px;
     min-height: 640px;
   }
 
@@ -1641,7 +1641,10 @@ textarea {
   }
 
   .phase-switcher {
-    display: none !important;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+    margin-bottom: 8px !important;
   }
 
   .workspace-grid {

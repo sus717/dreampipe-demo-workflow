@@ -44,7 +44,7 @@ export function RuntimeRail({ model }: RuntimeRailProps) {
       </Box>
       <Box className={`runtime-cell runtime-eta runtime-${model.phase}`}>
         <AutoFixHighRounded />
-        <Box><Typography>{model.phase === 'completed' ? 'Output ready' : 'Pipeline ETA'}</Typography><Typography>{model.runtime.eta}</Typography></Box>
+        <Box><Typography>{model.phase === 'completed' ? 'Mock completed' : 'Pipeline ETA'}</Typography><Typography>{model.runtime.eta}</Typography></Box>
       </Box>
     </Box>
   )

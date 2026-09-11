@@ -1,0 +1,499 @@
+{
+  "mode": "offline-mock",
+  "has_real_video": false,
+  "project_id": "dreampipe-demo-fuzhou-sanfangqixiang-niulai-20260828",
+  "snapshots": {
+    "waiting": {
+      "status": {
+        "schema_version": "1.0",
+        "project_id": "dreampipe-demo-fuzhou-sanfangqixiang-niulai-20260828",
+        "status": "WAITING_FOR_ASSETS",
+        "current_step": "awaiting_assets",
+        "progress": {
+          "completed_steps": 2,
+          "total_steps": 9,
+          "percent": 22
+        },
+        "retry": {
+          "is_retrying": false,
+          "max_attempts": 3,
+          "shots": []
+        },
+        "qa": {
+          "summary": {
+            "passed": 0,
+            "failed": 0,
+            "pending": 0
+          },
+          "shots": []
+        },
+        "error": {
+          "code": "REFERENCE_ASSETS_REQUIRED",
+          "message": "请先上传并确认可访问的商品参考图（HTTP(S) URL），再开始视频生成。",
+          "step": "awaiting_assets",
+          "retryable": true
+        },
+        "final_output": {
+          "status": "PENDING"
+        },
+        "updated_at": "2026-09-11T00:37:40.231879Z"
+      },
+      "events": [
+        {
+          "at": "2026-09-11T00:37:40.231490Z",
+          "node": "analyze_product",
+          "message": "Mock product analysis completed."
+        },
+        {
+          "at": "2026-09-11T00:37:40.231884Z",
+          "node": "ensure_reference_assets",
+          "message": "真实参考图未就绪，已暂停后续流程。"
+        },
+        {
+          "at": "2026-09-11T00:37:40.232206Z",
+          "node": "finish_waiting_for_assets",
+          "message": "Pipeline paused until real reference assets are supplied."
+        }
+      ],
+      "cost": {
+        "budget_cny": 30,
+        "spent_cny": 0,
+        "line_items": []
+      }
+    },
+    "running": {
+      "status": {
+        "schema_version": "1.0",
+        "project_id": "dreampipe-demo-fuzhou-sanfangqixiang-niulai-20260828",
+        "status": "RUNNING",
+        "current_step": "generate_shots",
+        "progress": {
+          "completed_steps": 7,
+          "total_steps": 9,
+          "percent": 77
+        },
+        "retry": {
+          "is_retrying": false,
+          "max_attempts": 3,
+          "shots": [
+            {
+              "shot_id": "S01",
+              "attempt": 1,
+              "status": "PENDING",
+              "repair_instruction": ""
+            },
+            {
+              "shot_id": "S02",
+              "attempt": 1,
+              "status": "PENDING",
+              "repair_instruction": ""
+            },
+            {
+              "shot_id": "S03",
+              "attempt": 1,
+              "status": "PENDING",
+              "repair_instruction": ""
+            }
+          ]
+        },
+        "qa": {
+          "summary": {
+            "passed": 0,
+            "failed": 0,
+            "pending": 3
+          },
+          "shots": [
+            {
+              "shot_id": "S01",
+              "status": "PENDING",
+              "scores": {},
+              "failure_codes": [],
+              "repair_instruction": "",
+              "checked_at": null
+            },
+            {
+              "shot_id": "S02",
+              "status": "PENDING",
+              "scores": {},
+              "failure_codes": [],
+              "repair_instruction": "",
+              "checked_at": null
+            },
+            {
+              "shot_id": "S03",
+              "status": "PENDING",
+              "scores": {},
+              "failure_codes": [],
+              "repair_instruction": "",
+              "checked_at": null
+            }
+          ]
+        },
+        "error": null,
+        "final_output": {
+          "status": "PENDING"
+        },
+        "updated_at": "2026-09-11T00:37:40.234677Z"
+      },
+      "events": [
+        {
+          "at": "2026-09-11T00:37:40.232978Z",
+          "node": "analyze_product",
+          "message": "Mock product analysis completed."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233197Z",
+          "node": "ensure_reference_assets",
+          "message": "Approved public reference assets are ready."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233508Z",
+          "node": "create_script",
+          "message": "Loaded script outline from Pod 2 creative handoff."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233735Z",
+          "node": "create_project_bible",
+          "message": "Loaded frozen Project Bible from Pod 2."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233983Z",
+          "node": "create_storyboard",
+          "message": "Loaded frozen three-shot storyboard from Pod 2."
+        },
+        {
+          "at": "2026-09-11T00:37:40.234323Z",
+          "node": "compile_prompts",
+          "message": "Mock MX Shell Prompt compiler created provider prompts."
+        },
+        {
+          "at": "2026-09-11T00:37:40.234679Z",
+          "node": "generate_shots",
+          "message": "mock provider generated 3 shot(s)."
+        }
+      ],
+      "cost": {
+        "budget_cny": 30,
+        "spent_cny": 0,
+        "line_items": []
+      }
+    },
+    "retrying": {
+      "status": {
+        "schema_version": "1.0",
+        "project_id": "dreampipe-demo-fuzhou-sanfangqixiang-niulai-20260828",
+        "status": "RETRYING",
+        "current_step": "qa_shots",
+        "progress": {
+          "completed_steps": 8,
+          "total_steps": 9,
+          "percent": 88
+        },
+        "retry": {
+          "is_retrying": true,
+          "max_attempts": 3,
+          "shots": [
+            {
+              "shot_id": "S01",
+              "attempt": 1,
+              "status": "PASSED",
+              "repair_instruction": ""
+            },
+            {
+              "shot_id": "S02",
+              "attempt": 1,
+              "status": "PASSED",
+              "repair_instruction": ""
+            },
+            {
+              "shot_id": "S03",
+              "attempt": 1,
+              "status": "RETRYING",
+              "repair_instruction": "Lock the supplied product reference, preserve its silhouette and regenerate only this shot."
+            }
+          ]
+        },
+        "qa": {
+          "summary": {
+            "passed": 2,
+            "failed": 1,
+            "pending": 0
+          },
+          "shots": [
+            {
+              "shot_id": "S01",
+              "status": "PASS",
+              "scores": {
+                "product_consistency": 96,
+                "logo_accuracy": 98,
+                "prompt_alignment": 94,
+                "visual_quality": 93,
+                "brand_compliance": 98,
+                "overall": 95
+              },
+              "failure_codes": [],
+              "repair_instruction": "",
+              "checked_at": "2026-09-11T00:37:40.235059Z"
+            },
+            {
+              "shot_id": "S02",
+              "status": "PASS",
+              "scores": {
+                "product_consistency": 96,
+                "logo_accuracy": 98,
+                "prompt_alignment": 94,
+                "visual_quality": 93,
+                "brand_compliance": 98,
+                "overall": 95
+              },
+              "failure_codes": [],
+              "repair_instruction": "",
+              "checked_at": "2026-09-11T00:37:40.235071Z"
+            },
+            {
+              "shot_id": "S03",
+              "status": "FAIL",
+              "scores": {
+                "product_consistency": 72,
+                "logo_accuracy": 93,
+                "prompt_alignment": 78,
+                "visual_quality": 84,
+                "brand_compliance": 98,
+                "overall": 78
+              },
+              "failure_codes": [
+                "PRODUCT_DRIFT"
+              ],
+              "repair_instruction": "Lock the supplied product reference, preserve its silhouette and regenerate only this shot.",
+              "checked_at": "2026-09-11T00:37:40.235075Z"
+            }
+          ]
+        },
+        "error": null,
+        "final_output": {
+          "status": "PENDING"
+        },
+        "updated_at": "2026-09-11T00:37:40.235081Z"
+      },
+      "events": [
+        {
+          "at": "2026-09-11T00:37:40.232978Z",
+          "node": "analyze_product",
+          "message": "Mock product analysis completed."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233197Z",
+          "node": "ensure_reference_assets",
+          "message": "Approved public reference assets are ready."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233508Z",
+          "node": "create_script",
+          "message": "Loaded script outline from Pod 2 creative handoff."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233735Z",
+          "node": "create_project_bible",
+          "message": "Loaded frozen Project Bible from Pod 2."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233983Z",
+          "node": "create_storyboard",
+          "message": "Loaded frozen three-shot storyboard from Pod 2."
+        },
+        {
+          "at": "2026-09-11T00:37:40.234323Z",
+          "node": "compile_prompts",
+          "message": "Mock MX Shell Prompt compiler created provider prompts."
+        },
+        {
+          "at": "2026-09-11T00:37:40.234679Z",
+          "node": "generate_shots",
+          "message": "mock provider generated 3 shot(s)."
+        },
+        {
+          "at": "2026-09-11T00:37:40.235085Z",
+          "node": "qa_shots",
+          "message": "Mock QA evaluated 3 result(s); failed shots: S03."
+        }
+      ],
+      "cost": {
+        "budget_cny": 30,
+        "spent_cny": 0,
+        "line_items": []
+      }
+    },
+    "completed": {
+      "status": {
+        "schema_version": "1.0",
+        "project_id": "dreampipe-demo-fuzhou-sanfangqixiang-niulai-20260828",
+        "status": "SUCCEEDED",
+        "current_step": "completed",
+        "progress": {
+          "completed_steps": 9,
+          "total_steps": 9,
+          "percent": 100
+        },
+        "retry": {
+          "is_retrying": false,
+          "max_attempts": 3,
+          "shots": [
+            {
+              "shot_id": "S01",
+              "attempt": 1,
+              "status": "PASSED",
+              "repair_instruction": ""
+            },
+            {
+              "shot_id": "S02",
+              "attempt": 1,
+              "status": "PASSED",
+              "repair_instruction": ""
+            },
+            {
+              "shot_id": "S03",
+              "attempt": 2,
+              "status": "PASSED",
+              "repair_instruction": ""
+            }
+          ]
+        },
+        "qa": {
+          "summary": {
+            "passed": 3,
+            "failed": 0,
+            "pending": 0
+          },
+          "shots": [
+            {
+              "shot_id": "S01",
+              "status": "PASS",
+              "scores": {
+                "product_consistency": 96,
+                "logo_accuracy": 98,
+                "prompt_alignment": 94,
+                "visual_quality": 93,
+                "brand_compliance": 98,
+                "overall": 95
+              },
+              "failure_codes": [],
+              "repair_instruction": "",
+              "checked_at": "2026-09-11T00:37:40.235059Z"
+            },
+            {
+              "shot_id": "S02",
+              "status": "PASS",
+              "scores": {
+                "product_consistency": 96,
+                "logo_accuracy": 98,
+                "prompt_alignment": 94,
+                "visual_quality": 93,
+                "brand_compliance": 98,
+                "overall": 95
+              },
+              "failure_codes": [],
+              "repair_instruction": "",
+              "checked_at": "2026-09-11T00:37:40.235071Z"
+            },
+            {
+              "shot_id": "S03",
+              "status": "PASS",
+              "scores": {
+                "product_consistency": 96,
+                "logo_accuracy": 98,
+                "prompt_alignment": 94,
+                "visual_quality": 93,
+                "brand_compliance": 98,
+                "overall": 95
+              },
+              "failure_codes": [],
+              "repair_instruction": "",
+              "checked_at": "2026-09-11T00:37:40.236389Z"
+            }
+          ]
+        },
+        "error": null,
+        "final_output": {
+          "status": "PENDING"
+        },
+        "updated_at": "2026-09-11T00:37:40.236748Z"
+      },
+      "events": [
+        {
+          "at": "2026-09-11T00:37:40.232978Z",
+          "node": "analyze_product",
+          "message": "Mock product analysis completed."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233197Z",
+          "node": "ensure_reference_assets",
+          "message": "Approved public reference assets are ready."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233508Z",
+          "node": "create_script",
+          "message": "Loaded script outline from Pod 2 creative handoff."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233735Z",
+          "node": "create_project_bible",
+          "message": "Loaded frozen Project Bible from Pod 2."
+        },
+        {
+          "at": "2026-09-11T00:37:40.233983Z",
+          "node": "create_storyboard",
+          "message": "Loaded frozen three-shot storyboard from Pod 2."
+        },
+        {
+          "at": "2026-09-11T00:37:40.234323Z",
+          "node": "compile_prompts",
+          "message": "Mock MX Shell Prompt compiler created provider prompts."
+        },
+        {
+          "at": "2026-09-11T00:37:40.234679Z",
+          "node": "generate_shots",
+          "message": "mock provider generated 3 shot(s)."
+        },
+        {
+          "at": "2026-09-11T00:37:40.235085Z",
+          "node": "qa_shots",
+          "message": "Mock QA evaluated 3 result(s); failed shots: S03."
+        },
+        {
+          "at": "2026-09-11T00:37:40.235611Z",
+          "node": "repair_prompts",
+          "message": "Mock repair agent created a new prompt version for failed shots."
+        },
+        {
+          "at": "2026-09-11T00:37:40.236037Z",
+          "node": "generate_shots",
+          "message": "mock provider generated 1 shot(s)."
+        },
+        {
+          "at": "2026-09-11T00:37:40.236398Z",
+          "node": "qa_shots",
+          "message": "Mock QA evaluated 1 result(s); failed shots: none."
+        },
+        {
+          "at": "2026-09-11T00:37:40.236751Z",
+          "node": "assemble_video",
+          "message": "Mock Remotion assembler created the final MP4 manifest."
+        }
+      ],
+      "cost": {
+        "budget_cny": 30,
+        "spent_cny": 8.4,
+        "line_items": [
+          {
+            "category": "llm",
+            "amount_cny": 0.4
+          },
+          {
+            "category": "video",
+            "amount_cny": 8.0
+          }
+        ]
+      }
+    }
+  }
+}

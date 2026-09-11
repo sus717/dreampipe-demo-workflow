@@ -307,8 +307,9 @@ def qa_shots(state: PipelineState) -> dict[str, Any]:
         if result["result_id"] in reviewed_result_ids:
             continue
         # The intentional first failure proves the repair loop during every demo run.
-        is_first_shot_02_attempt = result["shot_id"] == "shot_02" and result["attempt"] == 1
-        status: Literal["PASS", "FAIL"] = "FAIL" if is_first_shot_02_attempt else "PASS"
+        retry_target = "S03" if any(shot["shot_id"] == "S03" for shot in job["shots"]) else "shot_02"
+        is_first_retry_attempt = result["shot_id"] == retry_target and result["attempt"] == 1
+        status: Literal["PASS", "FAIL"] = "FAIL" if is_first_retry_attempt else "PASS"
         scores = {
             "product_consistency": 72 if status == "FAIL" else 96,
             "logo_accuracy": 93 if status == "FAIL" else 98,

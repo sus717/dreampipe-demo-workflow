@@ -31,7 +31,7 @@ export function CopilotPanel({ model, idea, onIdeaChange, onPrimaryAction }: Cop
         </Box>
 
         <Box className="director-scene">
-          <img src="/assets/niulai-character.png" alt="牛导角色" />
+          <img src={`${import.meta.env.BASE_URL}assets/niulai-character.png`} alt="牛导角色" />
           <Box className="director-message">
             <Typography>{model.assistant.headline}</Typography>
             <Typography>{model.assistant.body}</Typography>
@@ -87,7 +87,7 @@ export function CopilotPanel({ model, idea, onIdeaChange, onPrimaryAction }: Cop
             <span className="preview-dot" />
             <Typography>{model.preview.label}</Typography>
           </Stack>
-          <IconButton size="small" aria-label="全屏预览"><FullscreenRounded /></IconButton>
+          <IconButton size="small" aria-label="打开分镜原图" onClick={() => window.open(model.preview.image, '_blank', 'noopener,noreferrer')}><FullscreenRounded /></IconButton>
         </Box>
         <Box className="preview-frame">
           <img src={model.preview.image} alt="成片竖屏预览" />
@@ -96,7 +96,7 @@ export function CopilotPanel({ model, idea, onIdeaChange, onPrimaryAction }: Cop
             <Typography>第七巷今天调休</Typography>
             <Typography>去三坊七巷，找到第七巷</Typography>
           </Box>
-          <Button className="play-control" aria-label="播放预览"><PlayArrowRounded /></Button>
+          <Button className="play-control" aria-label="暂无真实视频" disabled><PlayArrowRounded /></Button>
         </Box>
         <Box className="preview-footer">
           <Typography>9:16</Typography>

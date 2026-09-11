@@ -5,9 +5,12 @@ on:
     branches:
       - main
       - "pod*-*"
+      - "feat/**"
+      - "codex/**"
   pull_request:
     branches:
       - main
+      - "feat/**"
 
 jobs:
   test:
@@ -41,4 +44,23 @@ jobs:
         env:
           PYTHONPATH: src
         run: python -m unittest discover -s tests -v
+
+      - name: Export integrated frontend snapshots
+        run: python scripts/export_web_demo.py
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Test and build frontend
+        working-directory: web
+        run: |
+          npm ci
+          npm test
+          npm run build
+          npx playwright install --with-deps chrome
+          npm run test:e2e
 

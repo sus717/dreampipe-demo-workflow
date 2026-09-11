@@ -6,6 +6,7 @@ import { CopilotPanel } from './components/CopilotPanel'
 import { Header } from './components/Header'
 import { PipelineBoard } from './components/PipelineBoard'
 import { RuntimeRail } from './components/RuntimeRail'
+import { IntegrationPanel } from './components/IntegrationPanel'
 import { usePipelineDemo } from './hooks/usePipelineDemo'
 
 export function App() {
@@ -47,6 +48,7 @@ export function App() {
     <Box ref={root} className="app-shell">
       <Box className="ambient-grid" aria-hidden="true" />
       <Header model={model} phase={phase} phases={phases} onPhaseChange={selectPhase} onRunDemo={runDemo} />
+      <IntegrationPanel phase={phase} />
       <Box className="workspace-grid">
         <ContractPanel model={model} />
         <PipelineBoard model={model} />

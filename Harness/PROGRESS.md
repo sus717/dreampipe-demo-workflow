@@ -4,7 +4,7 @@ Global task index. Load at session start to see what is active and what was done
 
 ## Active Task
 
-None — create a new task from `Harness/tasks/_template/` when work spans more than one step.
+task-integrated-demo-release — integrate shared contracts and deploy the testable demo to GitHub Pages.
 
 ## Task Index
 

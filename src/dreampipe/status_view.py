@@ -6,7 +6,12 @@ from typing import Any, Mapping
 
 
 MAX_ATTEMPTS = 3
-TOTAL_STEPS = 8
+PROGRESS_STEPS = {
+    "analyze_product", "ensure_reference_assets", "create_script",
+    "create_project_bible", "create_storyboard", "compile_prompts",
+    "generate_shots", "qa_shots", "assemble_video",
+}
+TOTAL_STEPS = len(PROGRESS_STEPS)
 STEP_MAP = {
     "analyze_product": "analyze_product",
     "ensure_reference_assets": "ensure_reference_assets",
@@ -95,7 +100,7 @@ def build_pipeline_status(job: Mapping[str, Any], events: list[Mapping[str, Any]
         })
 
     current_step = _current_step(job, events)
-    completed_steps = min(TOTAL_STEPS, sum(1 for event in events if event.get("node") in STEP_MAP))
+    completed_steps = len({event.get("node") for event in events} & PROGRESS_STEPS)
     public_status = _public_status(str(job["status"]))
     output_asset_id = (job.get("render_manifest") or {}).get("output_asset_id")
     output_asset = next((asset for asset in job.get("assets", []) if asset.get("asset_id") == output_asset_id), None)
