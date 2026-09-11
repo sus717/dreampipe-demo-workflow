@@ -25,9 +25,9 @@ test('renders the control tower and completes the selective retry', async ({ pag
   await page.getByRole('button', { name: '下载当前测试数据' }).click()
   expect((await downloadPromise).suggestedFilename()).toBe('dreampipe-completed.json')
   await page.getByRole('button', { name: '关闭', exact: true }).click()
+  await expect(page.getByRole('dialog')).toHaveCount(0)
 
-  const imagesLoaded = await page.locator('img').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))
-  expect(imagesLoaded).toBe(true)
+  await expect.poll(() => page.locator('img').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0)), { timeout: 20000 }).toBe(true)
 
   const viewportFits = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
   expect(viewportFits).toBe(true)

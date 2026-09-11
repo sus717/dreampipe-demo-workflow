@@ -6,4 +6,7 @@
 - GitHub Pages configured for Actions deployment; relative asset paths fixed.
 - Python: 13 tests passed. Frontend: 8 tests passed. Production build passed.
 - Chrome browser checks passed at 1440x900, 1280x720 and 390x844, including production subdirectory assets, S03 retry, JSON download and no page errors.
-- Deployment verification in progress.
+- GitHub Pages deployment run 34547562123 succeeded for release 646e8e2.
+- Live site browser check passed, including images, S03 retry, contract dialog and JSON download: https://sus717.github.io/dreampipe-demo-workflow/
+- Tests wait for remote image loading and dialog exit transitions, preventing network timing false failures.
+- Delivered as an offline Mock integration, not a live generation backend. Remaining features are documented in docs/TESTING.md and in the page.
